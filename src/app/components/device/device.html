@@ -1,0 +1,6 @@
+<div class="flex-column">
+  <div>Current Device: {{currentIp}}</div>
+  <p-tree [value]="connectedData" [style]="{'font-size': '12px'}">
+    <ng-template let-node pTemplate="default"> {{node.label}} </ng-template>
+  </p-tree>
+</div>
