@@ -1,0 +1,40 @@
+<div
+  class="flex-row"
+  style="padding-bottom: 0.5em; border-bottom: 1px solid var(--surface-border)"
+>
+  <span style="font-size: large; flex: 1"> Login Console </span>
+  <span style="color: var(--gray-500); cursor: pointer" (click)="close()">
+    <i class="fas fa-xmark"></i>
+  </span>
+</div>
+<div
+  class="flex-column"
+  style="padding-top: 1.8em; padding-bottom: 0.8em; gap: 1.8em"
+>
+  <div>
+    <span class="p-float-label">
+      <input pInputText id="username" [(ngModel)]="userName" />
+      <label htmlFor="username">Username</label>
+    </span>
+  </div>
+  <div>
+    <span class="p-float-label">
+      <p-password
+        [(ngModel)]="password"
+        [feedback]="false"
+        [toggleMask]="true"
+      ></p-password>
+      <label for="password">Password</label>
+    </span>
+  </div>
+</div>
+<div
+  class="flex-row"
+  style="
+    justify-content: center;
+    border-top: 1px solid var(--surface-border);
+    padding-top: 0.5em;
+  "
+>
+  <p-button label="Login" (click)="login()"> </p-button>
+</div>

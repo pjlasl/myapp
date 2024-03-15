@@ -1,51 +1,54 @@
 import { Component, OnDestroy } from "@angular/core";
-import { TerminalService } from "primeng/terminal";
-import { Subscription } from "rxjs";
-import { ChanceService } from "src/app/services/chanceService.service";
-
-export interface Command {
-    value: string,
-    callback: () => void,
-}
+import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
+import { ComponentBridgeService } from "src/app/services/componentBridgeService.service";
+import { Network } from "src/app/interfaces/network.interface";
+import { NetworkService } from "src/app/services/networkService.service";
+import { MyComputer } from "../myComputer/myComputer.component";
+import { StorageService } from "src/app/services/storageService.service";
 
 @Component({
     selector: 'terminal',
     templateUrl: './terminal.html',
-    providers: [TerminalService],
+    providers: [DialogService],
 })
-export class Terminal {
+export class Terminal {    
 
-    subscription: Subscription;
-    commands: Command[] = [];
+    networks: Network[] = [];
+    ref: DynamicDialogRef | undefined
 
-    constructor(private terminalService: TerminalService,
-        private chanceService: ChanceService,) {
+    constructor(private networkService: NetworkService,
+        private componentBridgeService: ComponentBridgeService,
+        private dialogService: DialogService,
+        private storageService: StorageService) {
+    }
 
-        this.subscription = this.terminalService.commandHandler.subscribe((command) => {
+    ngOnInit() {}    
 
+    onScan() {
+        let scans: Network[] = [];
+        for(let i = 0; i < 4; i++) {            
+            scans.push(this.networkService.generate());
+        }
+
+        this.networks = [...scans];
+    }
+
+    onConnect(network: Network) {
+        this.componentBridgeService.updateDevice(network);
+    }
+
+    openMyComputer() {
+        this.ref = this.dialogService.open(MyComputer, {
+            showHeader: false,
+            width: '25vw',
+            data: {
+                isMyComputer: true,
+                files: JSON.parse(this.storageService.getLocalData('myFiles'))
+            }
+        })
+
+        this.ref.onClose.subscribe((data) => {
             
-            let response = command === 'date' ? new Date().toDateString() : 'Unknown command: ' + command;
-            this.terminalService.sendResponse(response);
         })
     }
-
-    ngOnInit() {
-        this.commands = [
-            {
-                value: 'scan',
-                callback: () => this.getIp(),
-            }
-        ]
-    }
-
-    ngOnDestroy() {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
-    }
-
-    getIp() {
-        return this.chanceService.getIp();
-    }
-
 }

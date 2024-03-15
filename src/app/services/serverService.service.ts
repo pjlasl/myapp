@@ -1,10 +1,22 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http"
-import { Observable, catchError, map } from "rxjs";
+import { ChanceService } from "./chanceService.service";
 
 @Injectable()
 export class ServerService {
-    constructor(private http: HttpClient,) {};    
+    constructor(private chanceService: ChanceService,) {};
+
+    getIp() {
+        let ip = localStorage.getItem('myIp');
+        if (!ip) {
+            ip = this.chanceService.getIp();
+            localStorage.setItem('myIp', ip ? ip : '');
+        }
+        return ip;
+    }
+
+    scanForIp() {
+        return this.chanceService.getIp();
+    }
 
     getPersonalFiles() {
 

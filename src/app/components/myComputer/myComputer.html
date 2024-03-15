@@ -1,0 +1,49 @@
+<div class="flex-column" style="gap: 0.5em">
+  <div class="flex-row" *ngFor="let file of files">
+    <div class="flex-row" style="gap: 0.5em; flex: 1; align-items: center">
+      <span style="flex: 0.1">
+        <i [ngClass]="file.icon"></i>
+      </span>
+      <span style="flex: 0.9"> {{file.name}} </span>
+    </div>
+
+    <div
+      [ngSwitch]="myComputer"
+      class="flex-row"
+      style="justify-content: flex-end"
+    >
+      <div *ngSwitchCase="true">
+        <p-button
+          [rounded]="true"
+          icon="fas fa-coins"
+          size="small"
+          severity="success"
+          (click)="sell(file)"
+        >
+        </p-button>
+      </div>
+      <div *ngSwitchDefault>
+        <p-button
+          [rounded]="true"
+          icon="fas fa-download"
+          size="small"
+          (click)="download(file)"
+          [disabled]="file.downloaded"
+        >
+        </p-button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="flex-row"
+    style="
+      border-top: 1px solid var(--surface-border);
+      padding: 0.3em;
+      flex: 1;
+      justify-content: flex-end;
+    "
+  >
+    <p-button label="Close" [plain]="true" [text]="true" (click)="close()">
+    </p-button>
+  </div>
+</div>

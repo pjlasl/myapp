@@ -1,0 +1,26 @@
+<div *ngFor="let email of emails">
+  <div
+    *ngIf="email?.visible"
+    class="flex-row"
+    style="
+      align-items: center;
+      padding: 0.5em 0.8em;
+      gap: 1em;
+      border-bottom: 1px solid var(--gray-500);
+    "
+  >
+    <span style="flex: 0.25">{{email?.from}}</span>
+    <div>
+      <a
+        *ngIf="!complete"
+        style="font-weight: 600"
+        (click)="openEmail(email.id)"
+        >{{email?.topic}}</a
+      >
+      <span *ngIf="complete">{{email?.topic}}</span>
+    </div>
+    <span style="flex: 0.5; font-style: italic"
+      >{{email?.date | date : 'MM/dd/yyyy'}}</span
+    >
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<div class="flex-column">
+  <div class="flex-row" style="gap: 0.5em">
+    <div class="flex-row">
+      <span style="font-weight: 600">From:</span>
+    </div>
+    <div class="flex-column" style="flex: 1">
+      <span> {{email?.from}} </span>
+      <span
+        style="font-style: italic; font-size: smaller; color: var(--gray-500)"
+      >
+        {{email?.email}}
+      </span>
+    </div>
+
+    <span
+      class="flex-row"
+      style="flex: 0.5; justify-content: flex-end; cursor: pointer"
+      (click)="closeModal()"
+    >
+      <i class="fas fa-xmark"></i>
+    </span>
+  </div>
+</div>
+
+<div class="flex-column">
+  <ng-container>
+    <div [innerHTML]="html"></div>
+  </ng-container>
+</div>
+
+<div>
+  <div class="flex-row">
+    <div class="flex-row" style="flex: 0.5">
+      <p-button [plain]="true" [text]="true" label="Reply" (click)="reply()">
+      </p-button>
+    </div>
+    <div class="flex-row" style="flex: 0.5; justify-content: flex-end">
+      <p-button
+        [plain]="true"
+        [text]="true"
+        label="Close"
+        (click)="closeModal()"
+      >
+      </p-button>
+    </div>
+  </div>
+</div>

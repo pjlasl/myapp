@@ -1,6 +1,97 @@
-<div class="flex-column">
-  <div>Current Device: {{currentIp}}</div>
-  <p-tree [value]="connectedData" [style]="{'font-size': '12px'}">
-    <ng-template let-node pTemplate="default"> {{node.label}} </ng-template>
-  </p-tree>
+<div class="flex-column" style="gap: 0.5em">
+  <div
+    class="flex-row"
+    style="
+      background-color: var(--surface-ground);
+      padding: 0.8em;
+      border-radius: 4px;
+      align-items: center;
+      gap: 0.5em;
+    "
+  >
+    <span> Connected To </span>
+    <p-tag
+      *ngIf="connectedNetwork?.ip"
+      [value]="connectedNetwork.ip"
+      severity="warning"
+    >
+    </p-tag>
+    <span>
+      <i [ngClass]="getPortStatus()"></i>
+    </span>
+  </div>
+  <div class="flex-row" style="gap: 0.2em">
+    <p-button
+      pTooltip="Port Hack"
+      tooltipPosition="top"
+      icon="fas fa-user-secret"
+      [rounded]="true"
+      [outlined]="true"
+      size="small"
+      (click)="onPortHack()"
+      [disabled]="enablePortHack()"
+    >
+    </p-button>
+  </div>
+  <div class="flex-row" style="gap: 0.2em">
+    <p-button
+      pTooltip="Identify Devices"
+      tooltipPosition="top"
+      icon="fas fa-search"
+      [rounded]="true"
+      [outlined]="true"
+      size="small"
+      (click)="onSearch()"
+    >
+    </p-button>
+  </div>
+  <div *ngIf="isPortHack">
+    <p-progressBar
+      mode="indeterminate"
+      [style]="{ height: '6px' }"
+    ></p-progressBar>
+  </div>
+  <div>
+    <span> Devices Found </span>
+    <div>
+      <div
+        *ngFor="let device of foundDevices; index as i;"
+        style="border-bottom: 1px dashed var(--gray-500); padding: 0.5em"
+      >
+        <div class="flex-row">
+          <div class="flex-column" style="align-items: center; padding: 0.5em">
+            <i [ngClass]="device.icon"></i>
+          </div>
+          <div class="flex-column" style="flex: 1">
+            <span style="font-weight: 600; color: var(--primary-text)">
+              {{device.name}}
+            </span>
+            <span style="color: var(--gray-500)"> {{device.address}} </span>
+          </div>
+          <div class="flex-row" style="gap: 0.3em">
+            <p-button
+              *ngIf="device.allowContent"
+              [rounded]="true"
+              icon="fas fa-folder-tree"
+              severity="warning"
+              pTooltip="Search Device"
+              tooltipPosition="left"
+              (click)="openDevice(device)"
+            >
+            </p-button>
+            <p-button
+              [rounded]="true"
+              icon="fas fa-bugs"
+              severity="danger"
+              pTooltip="Upload Virus"
+              tooltipPosition="left"
+              (click)="onVirusUpload(device)"
+              [disabled]="device.affected"
+            >
+            </p-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

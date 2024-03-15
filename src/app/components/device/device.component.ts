@@ -1,27 +1,92 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
+import { ComponentBridgeService } from "src/app/services/componentBridgeService.service";
+import { Network } from "src/app/interfaces/network.interface";
+import { Devices} from "src/app/interfaces/device.interface";
 import { ChanceService } from "src/app/services/chanceService.service";
-import { ServerService } from "src/app/services/serverService.service";
-import { TreeNode } from "primeng/api";
-
+import { DeviceService } from "src/app/services/deviceService.service";
+import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
+import { MyComputer } from "../myComputer/myComputer.component";
+import { UserService } from "src/app/services/userService.service";
 @Component({
     selector: 'device',
     templateUrl: './device.html',
-    styleUrls: ['./device.component.css']
+    styleUrls: ['./device.component.css'],
+    providers: [DialogService]
 })
 export class Device {
-    
-    currentIp!: string;
-    connectedData!: TreeNode[];
 
-    constructor(private chanceService: ChanceService,
-        private serverService: ServerService,) {};
+    user: any;
+    connectedNetwork!: Network;    
+    foundDevices: any[] = [];
+    isPortHack: boolean = false;
+    ref: DynamicDialogRef | undefined
+
+    constructor(private componentBridgeService: ComponentBridgeService,
+        private chanceService: ChanceService,
+        private deviceService: DeviceService,
+        private dialogService: DialogService,
+        private userService: UserService) {};
 
     ngOnInit() {
-        
+        this.user = this.userService.getUser();
+        this.subscribeDeviceUpdate();
     };
 
-    ngAfterContentInit() {
-        this.currentIp = this.chanceService.getIp();
-        this.connectedData = this.serverService.getPersonalFiles();
+    subscribeDeviceUpdate() {
+        this.componentBridgeService.deviceUpdateDataObservable$.subscribe((data: Network) => {
+            if(data) {
+                this.connectedNetwork = data;
+            }
+        })
     }
+
+    getPortStatus() {
+        return this.connectedNetwork?.open ? 'fas fa-lock-open' : 'fas fa-lock';
+    }
+
+    enablePortHack() {
+        if(!this.connectedNetwork?.ip) return true;        
+        return false;
+    }
+
+    enableSearch() {        
+        if(!this.connectedNetwork?.open) return true;
+        if(this.foundDevices.length > 0) return true;
+        return false
+    }
+
+    onPortHack() {
+        this.isPortHack = true;
+        setTimeout(() => {
+            this.isPortHack = false;
+            this.connectedNetwork.open = true;
+        }, 5000)
+    }
+
+    onSearch() {
+        let count: number = this.chanceService.getDice();        
+        this.foundDevices = [];
+        for(let i = 0; i < count; i++) {                        
+            this.foundDevices.push({...this.deviceService.generateDevice()})
+        }
+        
+        console.log(this.foundDevices);
+    }
+
+    onVirusUpload(device: Devices) {
+        device.affected = true;
+        this.userService.updateWallet(1);        
+    }
+
+    openDevice(device: Devices) {
+        this.ref = this.dialogService.open( MyComputer, {
+            showHeader: false,
+            width: '25vw',
+            data: {
+                files: device.deviceContent
+            }
+        })
+    }
+
+    
 }

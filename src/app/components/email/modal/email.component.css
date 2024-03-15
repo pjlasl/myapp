@@ -1,0 +1,4 @@
+:host ::ng-deep .p-dialog .p-dynamic-dialog .p-dialog-content {
+    border-radius: 0 !important;
+    padding: .8em !important;
+}

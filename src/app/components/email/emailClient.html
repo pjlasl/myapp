@@ -1,0 +1,16 @@
+<div class="flex-column">
+  <div
+    class="flex-row"
+    style="
+      flex: 1;
+      padding: 0.8em;
+      border-bottom: 1px solid var(--surface-border);
+    "
+  >
+    <span style="font-size: large; font-weight: 600"> Email Client </span>
+  </div>
+  <ng-container
+    *ngComponentOutlet="missionList[0].component; inputs: missionList[0].inputs"
+  >
+  </ng-container>
+</div>
