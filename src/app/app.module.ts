@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';  
+import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
@@ -20,13 +21,13 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 
+import { Intro } from './components/intro/intro.component';
 import { Header } from './components/header/header.component';
 import { SideBar } from './components/sidebar/sidebar.component';
 import { Terminal } from './components/terminal/terminal.component';
 import { Shop } from './components/shop/shop.component';
 import { Device } from './components/device/device.component';
 import { MyComputer } from './components/myComputer/myComputer.component';
-
 
 import { LoginModal } from './components/modals/login/login.component';
 import { EmailModal } from './components/email/modal/email.component';
@@ -43,6 +44,7 @@ import { MissionService } from './services/missionService.service';
 @NgModule({
   declarations: [
     AppComponent,
+    Intro,
     Header,
     SideBar,
     Terminal,
@@ -50,7 +52,7 @@ import { MissionService } from './services/missionService.service';
     Device,
     EmailModal,
     MyComputer,
-    LoginModal,    
+    LoginModal,
   ],
   imports: [
     CommonModule,
@@ -71,6 +73,7 @@ import { MissionService } from './services/missionService.service';
     InputTextModule,
     PasswordModule,
     FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [
     ChanceService,
@@ -82,6 +85,6 @@ import { MissionService } from './services/missionService.service';
     UserService,
     MissionService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

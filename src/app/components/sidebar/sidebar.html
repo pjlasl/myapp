@@ -6,17 +6,27 @@
     background-color: var(--blue-100);
   "
 >
-  <span style="padding: 0.5em" pTooltip="Terminal" tooltipPosition="right">
+  <span style="padding: 0.5em" pTooltip="Email Client" tooltipPosition="right">
     <a routerLink="emailClient">
       <i class="fas fa-envelope"></i>
     </a>
   </span>
-  <span style="padding: 0.5em" pTooltip="Terminal" tooltipPosition="right">
+  <span
+    *ngIf="user?.hasTerminal"
+    style="padding: 0.5em"
+    pTooltip="Terminal"
+    tooltipPosition="right"
+  >
     <a routerLink="terminal">
       <i class="fas fa-terminal"></i>
     </a>
   </span>
-  <span style="padding: 0.5em" pTooltip="Shopping" tooltipPosition="right">
+  <span
+    *ngIf="user?.hasShop"
+    style="padding: 0.5em"
+    pTooltip="Shopping"
+    tooltipPosition="right"
+  >
     <a routerLink="shop">
       <i class="fas fa-cart-shopping"></i>
     </a>

@@ -25,7 +25,7 @@ export class EmailModal {
   }
 
   reply() {
-    this.ref?.close(true);
+    this.ref?.close(this.email);
   }
 
   closeModal() {

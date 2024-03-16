@@ -14,7 +14,7 @@
     <div class="flex-column" *ngFor="let shopItem of shopItems">
       <div class="flex-row" style="align-items: center">
         <div class="flex-row" style="align-items: center; padding: 0.8em">
-          <i class="fas fa-gift fa-2x"></i>
+          <i class="fas fa-gift fa-lg"></i>
         </div>
         <div class="flex-column">
           <span> {{shopItem.name}} </span>
@@ -39,6 +39,7 @@
               [rounded]="true"
               icon="fas fa-money-bill-1"
               [disabled]="version.purchased"
+              (click)="purchaseItem(shopItem, version)"
             >
             </p-button>
           </div>

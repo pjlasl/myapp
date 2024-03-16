@@ -1,0 +1,17 @@
+<div
+  *ngIf="email?.visible && missionActive"
+  class="flex-row"
+  style="
+    align-items: center;
+    padding: 0.5em 0.8em;
+    gap: 1em;
+    border-bottom: 1px solid var(--gray-500);
+  "
+>
+  <span style="flex: 0.25">{{email?.from}}</span>
+  <div style="flex: 1">
+    <a style="font-weight: 600" (click)="openEmail(email)">
+      {{email?.topic}}
+    </a>
+  </div>
+</div>

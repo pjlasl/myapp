@@ -1,66 +1,139 @@
-import { Injectable } from "@angular/core";
-import { StorageService } from "./storageService.service";
-import { ShopService } from "./shopService.service";
-import { ComponentBridgeService } from "src/app/services/componentBridgeService.service";
-import { ShopItem } from "../interfaces/shopItem.interface";
-import { Mission } from "./missionService.service";
+import { Injectable } from '@angular/core';
+import { StorageService } from './storageService.service';
+import { ShopService } from './shopService.service';
+import { ComponentBridgeService } from 'src/app/services/componentBridgeService.service';
+import { ShopItem } from '../interfaces/shopItem.interface';
+import { Mission } from './missionService.service';
 
 export interface User {
-    loggedIn: boolean,
-    purchasedProduct: ShopItem[],
-    cash: number,
-    missions: Mission[],
+  info: any;
+  loggedIn: boolean;
+  purchasedProduct: ShopItem[];
+  cash: number;
+  missions: Mission[];
+  level: Level;
+  currentXp: number;
+  hasTerminal: boolean;
+  hasShop: boolean;
+}
+
+export interface Level {
+  level: number;
+  levelXp: number;
 }
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class UserService {
+  user?: User;
 
-    user?: User;
+  constructor(
+    private storageService: StorageService,
+    private shopService: ShopService,
+    private componentBridgeService: ComponentBridgeService,
+  ) {}
 
-    constructor(private storageService: StorageService,
-        private shopService: ShopService,
-        private componentBridgeService: ComponentBridgeService,) {};
-
-    ngOnInit() {
-        
+  createUser(data: any) {
+    let user: User = {
+      info: data,
+      loggedIn: true,
+      purchasedProduct: [],
+      cash: 0,
+      missions: [
+        {
+          id: 0,
+          active: true,
+          complete: false,
+        },
+      ],
+      level: {
+        level: 1,
+        levelXp: this._nextLevel(1),
+      },
+      currentXp: 0,
+      hasTerminal: false,
+      hasShop: false,
     };
 
-    createUser() {
-        let user: User = {
-            loggedIn: true,
-            purchasedProduct: [this.shopService.getShopItem(1)],
-            cash: 0,
-            missions: [{
-                id: 0,
-                active: true,
-                complete
-                : false,
-            }]
-        }
+    this.saveUser(user);
+    this.componentBridgeService.updateUser(user);
+  }
 
-        this.storageService.saveLocalData('user', JSON.stringify(user));
-        this.componentBridgeService.updateCash(0);
-    }
+  unlockMission() {
+    let missionCount: number | undefined = this.getUser()?.missions.length;
+    let newMission: Mission = {
+      id: missionCount!,
+      active: true,
+      complete: false,
+    };
 
-    getUser() {
-        this.user = this.storageService.getLocalData('user') ? JSON.parse(this.storageService.getLocalData('user')) : undefined;
-        return this.user;
-    }
+    let user = this.getUser();
+    user!.missions.push(newMission);
 
-    getWallet() {
-        return this.getUser()?.cash;
-    }
+    this.saveUser(user!);
 
-    updateWallet(value: number = 0) {
-        let user: User = this.getUser()!;
-        user.cash += value;
+    this.componentBridgeService.missionAdd(newMission);
+  }
 
-        this.componentBridgeService.updateCash(value);
+  getUser() {
+    this.user = JSON.parse(this.storageService.getLocalData('user'));
+    return this.user;
+  }
 
-        this.storageService.saveLocalData('user', JSON.stringify(user));
-        
-    }
+  saveUser(user: User) {
+    this.storageService.saveLocalData('user', JSON.stringify(user));
+  }
 
+  getWallet() {
+    return this.getUser()?.cash;
+  }
+
+  updateWallet(value: number = 0) {
+    let user: User = this.getUser()!;
+    user.cash += value;
+
+    this.componentBridgeService.updateUser(user);
+    this.saveUser(user);
+  }
+
+  addProduct(shopItem: ShopItem) {
+    let user = this.getUser()!;
+    user?.purchasedProduct.unshift(shopItem);
+    this.saveUser(user);
+  }
+
+  hasProduct(productName: string) {
+    let index = this.getUser()?.purchasedProduct.findIndex((item) => {
+      return (item.name = productName);
+    });
+
+    return index! >= 0 ? true : false;
+  }
+
+  getLevel() {
+    return this.user?.level?.level;
+  }
+
+  getLevelXP() {
+    return this.user?.level?.levelXp;
+  }
+
+  getCurrentXP() {
+    return this.user?.currentXp;
+  }
+
+  updateXP() {
+    //if (this.user?.currentXp! >= this.user?.level?.levelXp!) {
+    const newLevel: Level | undefined = this.getUser()?.level;
+
+    newLevel!.level += 1;
+    newLevel!.levelXp = this._nextLevel(newLevel?.level!);
+  }
+
+  _nextLevel(lvl: number) {
+    const exponent = 1.5;
+    const baseXp = 1000;
+    return Math.floor(baseXp * Math.pow(lvl, exponent));
+  }
 }

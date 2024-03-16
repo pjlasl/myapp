@@ -18,11 +18,14 @@
       <span>
         <i class="fas fa-dollar"></i>
       </span>
-      <span style="font-weight: 600">{{cash}}</span>
+      <span style="font-weight: 600">{{user?.cash ? user?.cash : '0'}}</span>
     </div>
     <span (click)="showEmail()">
       <i class="pi pi-envelope"></i>
     </span>
-    <p-avatar label="PJ" shape="circle"></p-avatar>
+    <p-avatar
+      [label]="user?.info.firstName.charAt(0) + user?.info.lastName.charAt(0)"
+      shape="circle"
+    ></p-avatar>
   </div>
 </div>

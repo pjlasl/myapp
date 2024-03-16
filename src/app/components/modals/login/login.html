@@ -2,32 +2,62 @@
   class="flex-row"
   style="padding-bottom: 0.5em; border-bottom: 1px solid var(--surface-border)"
 >
-  <span style="font-size: large; flex: 1"> Login Console </span>
+  <span style="font-size: large; flex: 1"> Create Account </span>
   <span style="color: var(--gray-500); cursor: pointer" (click)="close()">
     <i class="fas fa-xmark"></i>
   </span>
 </div>
-<div
-  class="flex-column"
-  style="padding-top: 1.8em; padding-bottom: 0.8em; gap: 1.8em"
->
-  <div>
-    <span class="p-float-label">
-      <input pInputText id="username" [(ngModel)]="userName" />
-      <label htmlFor="username">Username</label>
-    </span>
+<form [formGroup]="newUser">
+  <div
+    class="flex-column"
+    style="padding-top: 1.8em; padding-bottom: 0.8em; gap: 1.8em"
+  >
+    <div>
+      <span class="p-float-label">
+        <input
+          pInputText
+          id="firstName"
+          [(ngModel)]="firstName"
+          formControlName="firstName"
+        />
+        <label htmlFor="firstName">First Name</label>
+      </span>
+    </div>
+    <div>
+      <span class="p-float-label">
+        <input
+          pInputText
+          id="lastName"
+          [(ngModel)]="lastName"
+          formControlName="lastName"
+        />
+        <label htmlFor="lastName">Last Name</label>
+      </span>
+    </div>
+    <div>
+      <span class="p-float-label">
+        <input
+          pInputText
+          id="userName"
+          [(ngModel)]="userName"
+          formControlName="userName"
+        />
+        <label htmlFor="userName">Username</label>
+      </span>
+    </div>
+    <div>
+      <span class="p-float-label">
+        <p-password
+          [(ngModel)]="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          formControlName="password"
+        ></p-password>
+        <label for="password">Password</label>
+      </span>
+    </div>
   </div>
-  <div>
-    <span class="p-float-label">
-      <p-password
-        [(ngModel)]="password"
-        [feedback]="false"
-        [toggleMask]="true"
-      ></p-password>
-      <label for="password">Password</label>
-    </span>
-  </div>
-</div>
+</form>
 <div
   class="flex-row"
   style="
@@ -36,5 +66,6 @@
     padding-top: 0.5em;
   "
 >
-  <p-button label="Login" (click)="login()"> </p-button>
+  <p-button label="Login" (click)="login()" [disabled]="newUser.invalid">
+  </p-button>
 </div>

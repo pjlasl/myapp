@@ -3,6 +3,10 @@
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 
+a {
+    cursor: pointer;
+}
+
 .flex-column {
     display: flex;
     flex-direction: column;

@@ -28,20 +28,13 @@
   </ng-container>
 </div>
 
-<div>
-  <div class="flex-row">
-    <div class="flex-row" style="flex: 0.5">
-      <p-button [plain]="true" [text]="true" label="Reply" (click)="reply()">
-      </p-button>
-    </div>
-    <div class="flex-row" style="flex: 0.5; justify-content: flex-end">
-      <p-button
-        [plain]="true"
-        [text]="true"
-        label="Close"
-        (click)="closeModal()"
-      >
-      </p-button>
-    </div>
+<div class="flex-row" *ngIf="email?.showFooter">
+  <div class="flex-row" style="flex: 0.5">
+    <p-button [plain]="true" [text]="true" label="Reply" (click)="reply()">
+    </p-button>
+  </div>
+  <div class="flex-row" style="flex: 0.5; justify-content: flex-end">
+    <p-button [plain]="true" [text]="true" label="Close" (click)="closeModal()">
+    </p-button>
   </div>
 </div>

@@ -1,14 +1,17 @@
 <div class="flex-column">
   <header></header>
-  <div class="flex-row">
+  <div *ngIf="loadIntro" class="flex-column" style="justify-content: center">
+    <intro (onBegin)="initializeTerminal($event)"></intro>
+  </div>
+  <div *ngIf="loadTerminal" class="flex-row">
     <div style="flex: 0.01">
       <sidebar></sidebar>
     </div>
-    <div style="flex: 0.69">
+    <div style="flex: 1">
       <router-outlet></router-outlet>
     </div>
-    <div style="flex: 0.3">
+    <!-- <div style="flex: 0.3">
       <device></device>
-    </div>
+    </div> -->
   </div>
 </div>

@@ -1,41 +1,48 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class StorageService {
+  constructor() {}
 
-    constructor() {};
+  public saveLocalData(key: string, value: any) {
+    localStorage.setItem(
+      key,
+      typeof value === 'object' ? JSON.stringify(value) : value,
+    );
+  }
 
-    public saveLocalData(key: string, value: any) {
-        localStorage.setItem(key,value);
-    }
+  public saveSessionData(key: string, value: any) {
+    sessionStorage.setItem(
+      key,
+      typeof value === 'object' ? JSON.stringify(value) : value,
+    );
+  }
 
-    public saveSessionData(key: string, value: any) {
-        sessionStorage.setItem(key, value);
-    }
+  public getLocalData(key: string): any {
+    let item = localStorage.getItem(key);
+    return typeof item === 'object' ? JSON.parse(item!) : item;
+  }
 
-    public getLocalData(key: string): any {
-        return localStorage.getItem(key);
-    }
+  public getSessionData(key: string) {
+    let item = sessionStorage.getItem(key);
+    return typeof item === 'object' ? JSON.parse(item!) : item;
+  }
 
-    public getSessionData(key: string) {
-        return sessionStorage.getItem(key);
-    }
+  public removeLocalData(key: string) {
+    localStorage.removeItem(key);
+  }
 
-    public removeLocalData(key: string) {
-        localStorage.removeItem(key);
-    }
+  public removeSessionData(key: string) {
+    sessionStorage.removeItem(key);
+  }
 
-    public removeSessionData(key: string) {
-        sessionStorage.removeItem(key);
-    }
+  public clearLocalData() {
+    localStorage.clear();
+  }
 
-    public clearLocalData() {
-        localStorage.clear();
-    }
-
-    public clearSessionData() {
-        sessionStorage.clear();
-    }
+  public clearSessionData() {
+    sessionStorage.clear();
+  }
 }

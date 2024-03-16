@@ -1,21 +1,34 @@
-import { Injectable } from "@angular/core";
-import { Subject } from "rxjs/internal/Subject";
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs/internal/Subject';
+import { User } from './userService.service';
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class ComponentBridgeService {
-    public deviceUpdateSubject = new Subject<any>();
-    public cashUpdateSubject = new Subject<any>();
+  public updateSidebarSubject = new Subject<any>();
+  public deviceUpdateSubject = new Subject<any>();
+  public userUpdateSubject = new Subject<User>();
+  public missionAddSubject = new Subject<any>();
 
-    deviceUpdateDataObservable$ = this.deviceUpdateSubject.asObservable();
-    cashUpdateDataObservable$ = this.cashUpdateSubject.asObservable();
+  sidebarUpdateDataObservable$ = this.updateSidebarSubject.asObservable();
+  deviceUpdateDataObservable$ = this.deviceUpdateSubject.asObservable();
+  userUpdateDataObservable$ = this.userUpdateSubject.asObservable();
+  missionAddDataObservable$ = this.missionAddSubject.asObservable();
 
-    updateDevice(data: any) {
-        this.deviceUpdateSubject.next(data);
-    }
+  updateSidebar(data: User) {
+    this.updateSidebarSubject.next(data);
+  }
 
-    updateCash(data: any) {
-        this.cashUpdateSubject.next(data);
-    }
+  updateDevice(data: any) {
+    this.deviceUpdateSubject.next(data);
+  }
+
+  updateUser(data: User) {
+    this.userUpdateSubject.next(data);
+  }
+
+  missionAdd(data: any) {
+    this.missionAddSubject.next(data);
+  }
 }
