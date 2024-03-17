@@ -1,47 +1,52 @@
-<div class="flex-column">
-  <div
-    class="flex-row"
-    style="flex: 1; justify-content: flex-end; padding: 0.5em; gap: 0.5em"
-  >
-    <p-button
-      label="Scan"
-      icon="fas fa-tower-cell"
-      size="small"
-      (click)="onScan()"
-    ></p-button>
-    <p-button
-      label="My Computer"
-      icon="fas fa-computer"
-      severity="warning"
-      size="small"
-      (click)="openMyComputer()"
+<div class="flex-row" style="flex-wrap: nowrap">
+  <div class="flex-column" style="flex: 0.69">
+    <div
+      class="flex-row"
+      style="flex: 1; justify-content: flex-end; padding: 0.5em; gap: 0.5em"
     >
-    </p-button>
+      <p-button
+        label="Scan"
+        icon="fas fa-tower-cell"
+        size="small"
+        (click)="onScan()"
+      ></p-button>
+      <p-button
+        label="My Computer"
+        icon="fas fa-computer"
+        severity="warning"
+        size="small"
+        (click)="openMyComputer()"
+      >
+      </p-button>
+    </div>
+    <div>
+      <p-table [value]="networks">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Network</th>
+            <th>IP</th>
+            <th>Security</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-network>
+          <tr>
+            <td>{{network.name}}</td>
+            <td>{{network.ip}}</td>
+            <td>{{network.security.name}}</td>
+            <td>
+              <p-button
+                label="Connect"
+                size="small"
+                (onClick)="onConnect(network)"
+              ></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
   </div>
-  <div>
-    <p-table [value]="networks">
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Network</th>
-          <th>IP</th>
-          <th>Security</th>
-          <th></th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-network>
-        <tr>
-          <td>{{network.name}}</td>
-          <td>{{network.ip}}</td>
-          <td>{{network.security.name}}</td>
-          <td>
-            <p-button
-              label="Connect"
-              size="small"
-              (onClick)="onConnect(network)"
-            ></p-button>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+  <div style="flex: 0.3">
+    <device></device>
   </div>
 </div>

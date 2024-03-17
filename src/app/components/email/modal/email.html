@@ -22,19 +22,28 @@
   </div>
 </div>
 
-<div class="flex-column">
-  <ng-container>
-    <div [innerHTML]="html"></div>
-  </ng-container>
-</div>
+<ng-container *ngIf="template; then template else defaultBody"></ng-container>
 
-<div class="flex-row" *ngIf="email?.showFooter">
-  <div class="flex-row" style="flex: 0.5">
-    <p-button [plain]="true" [text]="true" label="Reply" (click)="reply()">
-    </p-button>
+<ng-template #defaultBody>
+  <div class="flex-column">
+    <ng-container>
+      <div [innerHTML]="html"></div>
+    </ng-container>
   </div>
-  <div class="flex-row" style="flex: 0.5; justify-content: flex-end">
-    <p-button [plain]="true" [text]="true" label="Close" (click)="closeModal()">
-    </p-button>
+
+  <div class="flex-row" *ngIf="email?.showFooter">
+    <div class="flex-row" style="flex: 0.5">
+      <p-button [plain]="true" [text]="true" label="Reply" (click)="reply()">
+      </p-button>
+    </div>
+    <div class="flex-row" style="flex: 0.5; justify-content: flex-end">
+      <p-button
+        [plain]="true"
+        [text]="true"
+        label="Close"
+        (click)="closeModal()"
+      >
+      </p-button>
+    </div>
   </div>
-</div>
+</ng-template>

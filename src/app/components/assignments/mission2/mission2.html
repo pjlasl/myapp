@@ -1,0 +1,121 @@
+<div *ngFor="let email of emails">
+  <email-row-item
+    [email]="email"
+    [missionActive]="active"
+    (onClick)="openEmail(email.id)"
+  ></email-row-item>
+
+  <ng-template #step2>
+    <div class="flex-column">
+      <div>
+        <p>Hey {{user?.info.firstName}}!</p>
+        <p>
+          Way to go on taking the leap with the new venture! I'm proud of you
+          for seizing the opportunity. Now, to get started, here's what you need
+          to do: head over to
+          <a
+            style="font-weight: 600; text-decoration: underline"
+            (click)="goToShop()"
+            >this shop</a
+          >
+          and purchase the "Terminal" software.
+        </p>
+        <p>
+          Once you've got it installed, we'll be on our way to making things
+          happen.<br />
+          Reply back to me once you have the software installed.
+        </p>
+        <p>Excited to see where this takes us!</p>
+        <p>Cheers, Jack</p>
+      </div>
+      <div>
+        <p-button
+          [plain]="true"
+          [text]="true"
+          (click)="sendReply2()"
+          [disabled]="hasTerminal()"
+          label="Reply"
+          icon="fas fa-reply"
+        >
+        </p-button>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #step3>
+    <div class="flex-column">
+      <div>
+        <p>Hey {{user?.info.firstName}},</p>
+        <p>
+          Now that you have downloaded and installed the software, I guess I
+          should explain a little about the company I work with.
+        </p>
+        <p>
+          So, I've been working for this "company" for a while now, and let's
+          just say it operates in a bit of a gray area of legality. We're into
+          some pretty interesting stuff, walking that fine line between what's
+          totally legit and what's, well, not so much. But hey, it keeps things
+          exciting, right? We've got a talented team, and despite the risks,
+          there's some serious potential for growth and profit. Just thought I'd
+          give you a heads up on what I've been up to lately.
+        </p>
+
+        <p>
+          Attached you will find a .zip file containing some addons for the
+          "Terminal" program. Once you have installed the addons, reply to this
+          email and I will send further instructions.
+        </p>
+
+        <p>How Exciting! Jack</p>
+      </div>
+      <div class="flex-row" style="gap: 0.8em; align-items: center">
+        <div>
+          <p-button
+            [plain]="true"
+            [text]="true"
+            (click)="sendReply3()"
+            [disabled]="!hasAttachments()"
+            label="Reply"
+            icon="fas fa-reply"
+          >
+          </p-button>
+        </div>
+        <div class="flex-row" style="gap: 0.5em">
+          <p-button
+            [plain]="true"
+            [text]="true"
+            label="Terminal Addons.zip"
+            icon="fas fa-paperclip"
+            [disabled]="hasAttachments()"
+            (click)="downloadAttachments()"
+          >
+          </p-button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-component #step4>
+    <div class="flex-column">
+      <div>
+        <p>Almost there {{user?.info.firstName}},</p>
+        <p>
+          I think by now you have figured out what the terminal program and its
+          addons do and before you say, "Jack, what have you gotten me into?!",
+          I know you have been struggling to make end meet and not a single
+          company given you a chance.
+        </p>
+        <p>
+          I spoke with my supervisor and told him all about you. This is a great
+          opportunity for you to make some money on the side and maybe even have
+          a team under you in the future.
+        </p>
+        <p>
+          I'll reach out to you soon. In the meantime, gather some cash and
+          level up your experience.
+        </p>
+        <p>Good luck and have fun! Jack</p>
+      </div>
+    </div>
+  </ng-component>
+</div>

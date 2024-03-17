@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, TemplateRef } from '@angular/core';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Email } from '../emailClient.component';
@@ -12,6 +12,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class EmailModal {
   email: Email | undefined;
   html: SafeHtml | undefined;
+  @Input() template!: TemplateRef<any>;
 
   constructor(
     private ref: DynamicDialogRef,
@@ -20,7 +21,10 @@ export class EmailModal {
   ) {}
 
   ngOnInit() {
-    this.email = this.config.data;
+    this.email = this.config.data.email;
+    if (this.config.data.test) {
+      this.template = this.config.data.test;
+    }
     this.html = this.sanitizer.bypassSecurityTrustHtml(this.email?.body!);
   }
 

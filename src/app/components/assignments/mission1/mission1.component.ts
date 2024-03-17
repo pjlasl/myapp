@@ -48,7 +48,6 @@ export class Mission1 {
             `,
           visible: true,
           showFooter: true,
-          callback: () => this.sendVenmo(),
         },
         {
           id: 1,
@@ -62,9 +61,7 @@ export class Mission1 {
                  <p>Take care, and remember, I'm here for you.</p>
                  <p>Love, Grandma</p>`,
         },
-      ].sort((a, b) => {
-        return b.id - a.id;
-      });
+      ];
     }
   }
 
@@ -74,7 +71,9 @@ export class Mission1 {
     this.ref = this.dialogService.open(EmailModal, {
       showHeader: false,
       width: '40vw',
-      data: email,
+      data: {
+        email: email,
+      },
     });
 
     this.ref.onClose.subscribe((data: Email) => {

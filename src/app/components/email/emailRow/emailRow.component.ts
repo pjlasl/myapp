@@ -1,4 +1,10 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  TemplateRef,
+} from '@angular/core';
 import { Email } from '../emailClient.component';
 import { CommonModule } from '@angular/common';
 
@@ -12,6 +18,7 @@ export class EmailRow {
   @Input() email: Email | undefined;
   @Input() missionActive: boolean = false;
   @Output('onClick') onClick: EventEmitter<any> = new EventEmitter<any>();
+  @Input() template!: TemplateRef<any>;
 
   constructor() {}
 

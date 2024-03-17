@@ -1,19 +1,20 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CommonModule } from '@angular/common';
 import { EmailRow } from '../../email/emailRow/emailRow.component';
 import { MissionService } from 'src/app/services/missionService.service';
-import { UserService } from 'src/app/services/userService.service';
+import { User, UserService } from 'src/app/services/userService.service';
 import { Assignment } from '../assignment.interface';
 import { Email } from '../../email/emailClient.component';
 import { EmailModal } from '../../email/modal/email.component';
+import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
-
+import { ShopService } from 'src/app/services/shopService.service';
 @Component({
-  templateUrl: '../mission1/mission1.html',
+  templateUrl: '../mission2/mission2.html',
   standalone: true,
   providers: [DialogService],
-  imports: [CommonModule, EmailRow],
+  imports: [CommonModule, EmailRow, ButtonModule],
 })
 export class Mission2 implements Assignment {
   @Input() id: number = 0;
@@ -22,12 +23,18 @@ export class Mission2 implements Assignment {
   @Input() emails: Email[] | undefined;
 
   ref: DynamicDialogRef | undefined;
+  user: User | undefined;
+
+  @ViewChild('step2') step2!: ElementRef;
+  @ViewChild('step3') step3!: ElementRef;
+  @ViewChild('step4') step4!: ElementRef;
 
   constructor(
     private dialogService: DialogService,
     private missionService: MissionService,
     private userService: UserService,
     private router: Router,
+    private shopService: ShopService,
   ) {}
 
   ngOnInit() {
@@ -56,25 +63,29 @@ export class Mission2 implements Assignment {
           from: 'Jack',
           email: 'jack.mayer@somemail.com',
           date: new Date(),
-          topic: "Let's get started!",
-          body: `
-          <p>Hey ${this.userService.getUser()?.info.firstName}!</p>
-
-          <p>
-          Way to go on taking the leap with the new venture! I'm proud of you for seizing the opportunity. Now, to get started, 
-          here's what you need to do: head over to <a href="shop">this shop</a> and purchase the "Terminal" software. Once you've 
-          got it installed, we'll be on our way to making things happen. Reply back to me once you have the software installed.
-          </p>
-
-          <p>Excited to see where this takes us!</p>
-
-          <p>Cheers, Jack</p>
-          `,
+          topic: 'Welcome aboard',
           visible: false,
-          showFooter: this.userService.hasProduct('terminal'),
+        },
+        {
+          id: 2,
+          from: 'Jack',
+          email: 'jack.mayer@somemail.com',
+          date: new Date(),
+          topic: 'Environment Setup',
+          visible: false,
+        },
+        {
+          id: 3,
+          from: 'Jack',
+          email: 'jack.mayer@somemail.com',
+          date: new Date(),
+          topic: "Let's get started!",
+          visible: false,
         },
       ];
     }
+
+    this.user = this.userService.getUser();
   }
 
   getEmail(id: number) {
@@ -87,11 +98,27 @@ export class Mission2 implements Assignment {
 
   openEmail(id: number) {
     let email = this.getEmail(id);
+    let template: ElementRef | undefined;
+
+    switch (id) {
+      case 1:
+        template = this.step2;
+        break;
+      case 2:
+        template = this.step3;
+        break;
+      case 3:
+        template = this.step4;
+        break;
+    }
 
     this.ref = this.dialogService.open(EmailModal, {
       showHeader: false,
       width: '40vw',
-      data: email,
+      data: {
+        email: email,
+        test: template,
+      },
     });
 
     this.ref.onClose.subscribe((data: Email) => {
@@ -116,13 +143,42 @@ export class Mission2 implements Assignment {
   }
 
   sendReply2() {
-    let email = this.getEmail(2);
-    email.visible = true;
+    if (this.userService.hasProduct('terminal')) {
+      let email = this.getEmail(2);
+      email.visible = true;
 
-    //this.missionService.updateMission(this);
+      this.missionService.updateMission(this);
+    }
+  }
+
+  sendReply3() {}
+
+  downloadAttachments() {
+    this.userService.addProduct(
+      this.shopService.getShopItemByName('PortHack')!,
+    );
+    this.userService.addProduct(
+      this.shopService.getShopItemByName('Device Sniffer')!,
+    );
+    this.userService.addProduct(
+      this.shopService.getShopItemByName('HappyFace')!,
+    );
+  }
+
+  hasAttachments() {
+    let found = this.userService.hasProduct('PortHack');
+    found = this.userService.hasProduct('Device Sniffer');
+    found = this.userService.hasProduct('HappyFace');
+    return found;
   }
 
   goToShop() {
     this.router.navigate(['shop']);
+    this.ref?.close();
+  }
+
+  hasTerminal() {
+    let response = this.userService.hasProduct('terminal');
+    return !response;
   }
 }

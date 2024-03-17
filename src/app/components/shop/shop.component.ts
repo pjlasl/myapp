@@ -22,6 +22,7 @@ export class Shop {
     this.user = this.userService.getUser();
     if (!this.user?.hasShop) {
       this.user!.hasShop = true;
+      this.userService.saveUser(this.user!);
       this.componentBridgeService.updateSidebar(this.user!);
     }
 

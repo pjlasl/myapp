@@ -1,5 +1,5 @@
 import { NgComponentOutlet } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, TemplateRef, inject } from '@angular/core';
 import { MissionService } from 'src/app/services/missionService.service';
 import { User, UserService } from 'src/app/services/userService.service';
 import { ComponentBridgeService } from 'src/app/services/componentBridgeService.service';
@@ -11,10 +11,9 @@ export interface Email {
   email: string;
   date: Date;
   topic: string;
-  body: string;
+  body?: string;
   visible?: boolean;
   showFooter?: boolean;
-  callback?: () => void;
 }
 
 @Component({

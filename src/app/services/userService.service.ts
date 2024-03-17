@@ -105,7 +105,7 @@ export class UserService {
 
   hasProduct(productName: string) {
     let index = this.getUser()?.purchasedProduct.findIndex((item) => {
-      return (item.name = productName);
+      return item.name.toLowerCase() === productName.toLowerCase();
     });
 
     return index! >= 0 ? true : false;
