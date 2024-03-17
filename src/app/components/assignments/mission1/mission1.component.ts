@@ -6,6 +6,7 @@ import { Email } from '../../email/emailClient.component';
 import { MissionService } from 'src/app/services/missionService.service';
 import { UserService } from 'src/app/services/userService.service';
 import { EmailRow } from '../../email/emailRow/emailRow.component';
+
 @Component({
   templateUrl: './mission1.html',
   standalone: true,
@@ -73,6 +74,7 @@ export class Mission1 {
       width: '40vw',
       data: {
         email: email,
+        test: undefined,
       },
     });
 

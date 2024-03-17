@@ -123,12 +123,18 @@ export class UserService {
     return this.user?.currentXp;
   }
 
-  updateXP() {
-    //if (this.user?.currentXp! >= this.user?.level?.levelXp!) {
-    const newLevel: Level | undefined = this.getUser()?.level;
+  updateCurrentXP(value: number) {
+    let user = this.getUser()!;
+    user.currentXp += value;
 
-    newLevel!.level += 1;
-    newLevel!.levelXp = this._nextLevel(newLevel?.level!);
+    if (user.currentXp >= user.level.levelXp) {
+      user.level.level += 1;
+      user.level.levelXp = this._nextLevel(user.level.level);
+      user.currentXp = 0;
+    }
+
+    this.saveUser(user);
+    this.componentBridgeService.updateUser(user);
   }
 
   _nextLevel(lvl: number) {

@@ -20,6 +20,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 import { Intro } from './components/intro/intro.component';
 import { Header } from './components/header/header.component';
@@ -74,6 +75,7 @@ import { MissionService } from './services/missionService.service';
     PasswordModule,
     FormsModule,
     ReactiveFormsModule,
+    OverlayPanelModule,
   ],
   providers: [
     ChanceService,

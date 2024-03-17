@@ -16,7 +16,7 @@ import { ShopService } from 'src/app/services/shopService.service';
   providers: [DialogService],
   imports: [CommonModule, EmailRow, ButtonModule],
 })
-export class Mission2 implements Assignment {
+export class Mission2 {
   @Input() id: number = 0;
   @Input() active: boolean = false;
   @Input() complete: boolean = false;
@@ -47,7 +47,7 @@ export class Mission2 implements Assignment {
           date: new Date(),
           topic: 'A business opportunity',
           body: `
-          <p>Hey ${this.userService.getUser()?.info.firstName}!</p>
+          <p>Hey!</p>
           
           <p>Hope you're hanging in there! I came across this opportunity that could help us make some quick cash, but I gotta be upfront - it's a bit risky.
           There's potential for big returns, but we need to weigh the pros and cons carefully before jumping in. Let me know if you're interested, and we can
@@ -151,7 +151,11 @@ export class Mission2 implements Assignment {
     }
   }
 
-  sendReply3() {}
+  sendReply3() {
+    let email = this.getEmail(3);
+    email.visible = true;
+    this.missionService.updateMission(this);
+  }
 
   downloadAttachments() {
     this.userService.addProduct(
@@ -178,6 +182,7 @@ export class Mission2 implements Assignment {
   }
 
   hasTerminal() {
+    return;
     let response = this.userService.hasProduct('terminal');
     return !response;
   }

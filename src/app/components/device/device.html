@@ -9,6 +9,16 @@
       gap: 0.5em;
     "
   >
+    <span
+      style="
+        background-color: var(--text-color);
+        color: var(--surface-0);
+        border-radius: 6px;
+        padding: 0.3em;
+      "
+    >
+      <i class="fas fa-network-wired"></i>
+    </span>
     <span> Connected To </span>
     <p-tag
       *ngIf="connectedNetwork?.ip"
@@ -20,75 +30,119 @@
       <i [ngClass]="getPortStatus()"></i>
     </span>
   </div>
-  <div class="flex-row" style="gap: 0.2em">
-    <p-button
-      pTooltip="Port Hack"
-      tooltipPosition="top"
-      icon="fas fa-user-secret"
-      [rounded]="true"
-      [outlined]="true"
-      size="small"
-      (click)="onPortHack()"
-      [disabled]="enablePortHack()"
-    >
-    </p-button>
+  <div
+    *ngIf="connectedNetwork?.open"
+    style="
+      background-color: var(--green-300);
+      padding: 0.2em;
+      color: var(--surface-0);
+    "
+  >
+    <span style="font-size: smaller"> Admin Rights Granted... </span>
   </div>
-  <div class="flex-row" style="gap: 0.2em">
-    <p-button
-      pTooltip="Identify Devices"
-      tooltipPosition="top"
-      icon="fas fa-search"
-      [rounded]="true"
-      [outlined]="true"
-      size="small"
-      (click)="onSearch()"
-    >
-    </p-button>
-  </div>
-  <div *ngIf="isPortHack">
-    <p-progressBar
-      mode="indeterminate"
-      [style]="{ height: '6px' }"
-    ></p-progressBar>
-  </div>
-  <div>
-    <span> Devices Found </span>
-    <div>
-      <div
-        *ngFor="let device of foundDevices; index as i;"
-        style="border-bottom: 1px dashed var(--gray-500); padding: 0.5em"
+  <div class="flex-column" style="padding: 0.5em; gap: 0.5em">
+    <div class="flex-row" style="gap: 0.2em">
+      <p-button
+        pTooltip="Port Hack"
+        tooltipPosition="top"
+        icon="fas fa-user-secret"
+        [rounded]="true"
+        [outlined]="true"
+        size="small"
+        (click)="onPortHack()"
+        [disabled]="enablePortHack()"
       >
-        <div class="flex-row">
-          <div class="flex-column" style="align-items: center; padding: 0.5em">
-            <i [ngClass]="device.icon"></i>
-          </div>
-          <div class="flex-column" style="flex: 1">
-            <span style="font-weight: 600; color: var(--primary-text)">
-              {{device.name}}
-            </span>
-            <span style="color: var(--gray-500)"> {{device.address}} </span>
-          </div>
-          <div class="flex-row" style="gap: 0.3em">
-            <p-button
-              *ngIf="device.allowContent"
-              [rounded]="true"
-              icon="fas fa-folder-tree"
-              severity="warning"
-              pTooltip="Search Device"
-              tooltipPosition="left"
-              (click)="openDevice(device)"
+      </p-button>
+    </div>
+    <div class="flex-row" style="gap: 0.2em">
+      <p-button
+        pTooltip="Identify Devices"
+        tooltipPosition="top"
+        icon="fas fa-search"
+        [rounded]="true"
+        [outlined]="true"
+        size="small"
+        (click)="onSearch()"
+        [disabled]="enableSearch()"
+      >
+      </p-button>
+    </div>
+    <div
+      *ngIf="isPortHack"
+      class="flex-column"
+      style="height: 75vh; justify-content: center; align-items: center"
+    >
+      <span style="font-size: x-large"> Port Hacking... </span>
+      <div>
+        <p-progressBar
+          mode="indeterminate"
+          [style]="{ height: '10px', 'width':'45vh' }"
+        ></p-progressBar>
+      </div>
+    </div>
+    <div class="flex-column" *ngIf="foundDevices.length > 0">
+      <div
+        class="flex-row"
+        style="
+          padding: 0.5em;
+          gap: 0.5em;
+          background-color: var(--surface-b);
+          align-items: center;
+        "
+      >
+        <span
+          style="
+            background-color: var(--text-color);
+            color: var(--surface-0);
+            border-radius: 6px;
+            padding: 0.3em;
+          "
+        >
+          <i class="fa fa-server"></i>
+        </span>
+        <span>Devices</span>
+      </div>
+
+      <div>
+        <div
+          *ngFor="let device of foundDevices; index as i;"
+          style="border-bottom: 1px dashed var(--gray-500); padding: 0.5em"
+        >
+          <div class="flex-row">
+            <div
+              class="flex-column"
+              style="align-items: center; padding: 0.5em"
             >
-            </p-button>
-            <p-button
-              [rounded]="true"
-              icon="fas fa-bugs"
-              severity="danger"
-              pTooltip="Upload Virus"
-              tooltipPosition="left"
-              (click)="onVirusUpload(device)"
-              [disabled]="device.affected"
-            >
-            </p-button>
+              <i [ngClass]="device.icon"></i>
+            </div>
+            <div class="flex-column" style="flex: 1">
+              <span style="font-weight: 600; color: var(--primary-text)">
+                {{device.name}}
+              </span>
+              <span style="color: var(--gray-500)"> {{device.address}} </span>
+            </div>
+            <div class="flex-row" style="gap: 0.3em">
+              <p-button
+                *ngIf="device.allowContent"
+                [rounded]="true"
+                icon="fas fa-folder-tree"
+                severity="warning"
+                pTooltip="Search Device"
+                tooltipPosition="left"
+                (click)="openDevice(device)"
+              >
+              </p-button>
+              <p-button
+                [rounded]="true"
+                icon="fas fa-bugs"
+                severity="danger"
+                pTooltip="Upload Virus"
+                tooltipPosition="left"
+                (click)="onVirusUpload(device)"
+                [disabled]="device.affected"
+              >
+              </p-button>
+            </div>
           </div>
         </div>
       </div>

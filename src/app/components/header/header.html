@@ -18,7 +18,14 @@
       <span>
         <i class="fas fa-id-badge"></i>
       </span>
-      <span> {{user?.level?.level}} </span>
+      <span style="cursor: pointer" (click)="userLevel.toggle($event)">
+        {{user?.level?.level}}
+      </span>
+      <p-overlayPanel #userLevel>
+        <div class="flex-column">
+          <span> {{user?.currentXp}} / {{user?.level?.levelXp}} </span>
+        </div>
+      </p-overlayPanel>
     </div>
     <div>
       <span>
