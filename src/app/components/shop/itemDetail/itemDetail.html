@@ -20,7 +20,7 @@
       ></p-tag>
       <div>
         <p-rating
-          [(ngModel)]="value"
+          [(ngModel)]="shopItem.data.rating"
           [cancel]="false"
           [readonly]="true"
         ></p-rating>
@@ -30,7 +30,12 @@
       class="flex-column"
       style="padding: 0.5em; align-items: center; gap: 0.5em"
     >
-      <p-button label="Buy Now" severity="warning"> </p-button>
+      <p-button
+        label="Buy Now"
+        severity="warning"
+        (click)="purchaseItem(shopItem, shopItem.data.versions[0])"
+      >
+      </p-button>
       <span style="font-size: large">
         ${{shopItem.data.version[0].price}}
       </span>
@@ -42,73 +47,90 @@
         <span style="color: var(--gray-700); font-weight: 600"> About </span>
       </div>
     </p-divider>
-    <span>
-      "Terminal" was designed by a computer software engineer to assist him
-      scanning for networks that could be used for nepharious reasons. The
-      program scans nearby networks and provides the following: Network name, IP
-      address, and the security protocol associated to the network. The original
-      author has released as open source with the disclaimer that it should only
-      be used for educational purposes only.
-    </span>
+    <span> {{shopItem.data.description}} </span>
   </div>
-  <div class="flex-column">
-    <p-divider [align]="'left'">
-      <div class="inline-flex align-items-center">
-        <span style="color: var(--gray-700); font-weight: 600"> Addons </span>
-      </div>
-    </p-divider>
-    <span>
-      The following addons are available to purchase. Not all addons have been
-      verified and should be used with caution.
-    </span>
-    <div
-      class="flex-row"
-      *ngFor="let addon of shopItem.data.addons"
-      style="
-        margin-top: 0.5em;
-        background-color: var(--purple-400);
-        padding: 0.5em;
-        border-radius: 5px;
-        gap: 0.5em;
-      "
-    >
-      <span
-        class="flex-row"
-        style="
-          padding: 0.5em;
-          background-color: var(--surface-0);
-          color: var(--purple-400);
-          border-radius: 5px;
-          justify-content: center;
-          align-items: center;
-          flex: 0.05;
-        "
-      >
-        <i class="fas fa-file-circle-plus"></i>
+
+  <ng-container *ngIf="template; then template else addons"></ng-container>
+
+  <ng-template #addons>
+    <div class="flex-column" style="gap: 0.5em">
+      <p-divider [align]="'left'">
+        <div class="inline-flex align-items-center">
+          <span style="color: var(--gray-700); font-weight: 600"> Addons </span>
+        </div>
+      </p-divider>
+      <span>
+        The following addons are available to purchase. Not all addons have been
+        verified and should be used with caution.
       </span>
-      <div class="flex-column" style="flex: 0.75; color: var(--surface-0)">
-        <span style="font-style: larger; font-weight: 600">
-          {{addon.name}}
-        </span>
-        <span style="font-size: smaller; font-style: italic">
-          {{addon.description}}
-        </span>
-      </div>
       <div
         class="flex-row"
-        style="
-          background-color: var(--surface-0);
-          padding: 0.2em;
-          border-radius: 5px;
-          align-items: center;
-          gap: 0.5em;
-          flex: 0.2;
-          justify-content: flex-end;
-        "
+        style="align-items: center; gap: 0.5em; justify-content: flex-end"
       >
-        <span> ${{addon.versions[0].price}}</span>
-        <p-button label="Buy" severity="warning"> </p-button>
+        <span style="font-weight: 600">Show All:</span>
+        <p-inputSwitch
+          [(ngModel)]="checked"
+          (onChange)="filterAddons($event)"
+        ></p-inputSwitch>
+      </div>
+      <div>
+        <div
+          class="flex-row"
+          *ngFor="let addon of filteredAddonsList"
+          style="
+            margin-top: 0.5em;
+            background-color: var(--purple-400);
+            padding: 0.5em;
+            border-radius: 5px;
+            gap: 0.5em;
+          "
+        >
+          <span
+            class="flex-row"
+            style="
+              padding: 0.5em;
+              background-color: var(--surface-0);
+              color: var(--purple-400);
+              border-radius: 5px;
+              justify-content: center;
+              align-items: center;
+              flex: 0.05;
+            "
+          >
+            <i class="fas fa-file-circle-plus"></i>
+          </span>
+          <div class="flex-column" style="flex: 0.75; color: var(--surface-0)">
+            <span style="font-style: larger; font-weight: 600">
+              {{addon.name}}
+            </span>
+            <span style="font-size: smaller; font-style: italic">
+              {{addon.description}}
+            </span>
+          </div>
+          <div
+            class="flex-row"
+            style="
+              background-color: var(--surface-0);
+              padding: 0.2em;
+              border-radius: 5px;
+              align-items: center;
+              gap: 0.5em;
+              flex: 0.2;
+              justify-content: flex-end;
+            "
+          >
+            <span> ${{addon.versions[0].price}}</span>
+            <p-button
+              label="Buy"
+              severity="warning"
+              [disabled]="addon.versions[0].purchased"
+            >
+            </p-button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </ng-template>
 </div>
+
+<ng-template #empty> </ng-template>

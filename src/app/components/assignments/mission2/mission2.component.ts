@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { EmailRow } from '../../email/emailRow/emailRow.component';
 import { MissionService } from 'src/app/services/missionService.service';
 import { User, UserService } from 'src/app/services/userService.service';
-import { Assignment } from '../assignment.interface';
 import { Email } from '../../email/emailClient.component';
 import { EmailModal } from '../../email/modal/email.component';
 import { ButtonModule } from 'primeng/button';
@@ -24,7 +23,9 @@ export class Mission2 {
 
   ref: DynamicDialogRef | undefined;
   user: User | undefined;
+  activeEmail!: Email;
 
+  @ViewChild('step1') step1!: ElementRef;
   @ViewChild('step2') step2!: ElementRef;
   @ViewChild('step3') step3!: ElementRef;
   @ViewChild('step4') step4!: ElementRef;
@@ -44,43 +45,37 @@ export class Mission2 {
           id: 0,
           from: 'Jack',
           email: 'jack.mayer@somemail.com',
-          date: new Date(),
+          read: false,
           topic: 'A business opportunity',
-          body: `
-          <p>Hey!</p>
-          
-          <p>Hope you're hanging in there! I came across this opportunity that could help us make some quick cash, but I gotta be upfront - it's a bit risky.
-          There's potential for big returns, but we need to weigh the pros and cons carefully before jumping in. Let me know if you're interested, and we can
-          discuss it further.</p>
-
-          <p>Cheers, Jack</p>
-          `,
           visible: true,
-          showFooter: true,
+          actionComplete: false,
         },
         {
           id: 1,
           from: 'Jack',
           email: 'jack.mayer@somemail.com',
-          date: new Date(),
+          read: false,
           topic: 'Welcome aboard',
           visible: false,
+          actionComplete: false,
         },
         {
           id: 2,
           from: 'Jack',
           email: 'jack.mayer@somemail.com',
-          date: new Date(),
+          read: false,
           topic: 'Environment Setup',
           visible: false,
+          actionComplete: false,
         },
         {
           id: 3,
           from: 'Jack',
           email: 'jack.mayer@somemail.com',
-          date: new Date(),
+          read: false,
           topic: "Let's get started!",
           visible: false,
+          actionComplete: false,
         },
       ];
     }
@@ -97,10 +92,13 @@ export class Mission2 {
   }
 
   openEmail(id: number) {
-    let email = this.getEmail(id);
+    this.activeEmail = this.getEmail(id);
     let template: ElementRef | undefined;
 
     switch (id) {
+      case 0:
+        template = this.step1;
+        break;
       case 1:
         template = this.step2;
         break;
@@ -116,26 +114,17 @@ export class Mission2 {
       showHeader: false,
       width: '40vw',
       data: {
-        email: email,
+        email: this.activeEmail,
         test: template,
       },
     });
 
-    this.ref.onClose.subscribe((data: Email) => {
-      if (data) {
-        switch (data.id) {
-          case 0:
-            this.sendReply1();
-            break;
-          case 1:
-            this.sendReply2();
-            break;
-        }
-      }
-    });
+    this.ref.onClose.subscribe((data: Email) => {});
   }
 
   sendReply1() {
+    this.activeEmail.actionComplete = true;
+
     let email = this.getEmail(1);
     email.visible = true;
 
@@ -144,6 +133,8 @@ export class Mission2 {
 
   sendReply2() {
     if (this.userService.hasProduct('terminal')) {
+      this.activeEmail.actionComplete = true;
+
       let email = this.getEmail(2);
       email.visible = true;
 

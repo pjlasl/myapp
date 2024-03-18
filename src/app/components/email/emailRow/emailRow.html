@@ -10,7 +10,12 @@
 >
   <span style="flex: 0.25">{{email?.from}}</span>
   <div style="flex: 1">
-    <a style="font-weight: 600" (click)="openEmail(email)">
+    <span *ngIf="email?.actionComplete"> {{email?.topic}} </span>
+    <a
+      *ngIf="!email?.actionComplete"
+      style="font-weight: 600"
+      (click)="openEmail(email)"
+    >
       {{email?.topic}}
     </a>
   </div>

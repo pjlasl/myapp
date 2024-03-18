@@ -2,23 +2,23 @@ import { Injectable } from '@angular/core';
 import { StorageService } from './storageService.service';
 import { ShopService } from './shopService.service';
 import { ComponentBridgeService } from 'src/app/services/componentBridgeService.service';
-import { ShopItem } from '../interfaces/shopItem.interface';
 import { Mission } from './missionService.service';
+import { TreeNode } from 'primeng/api';
 
 export interface User {
   info: any;
   loggedIn: boolean;
-  purchasedProduct: ShopItem[];
+  purchasedProduct: TreeNode[];
   cash: number;
   missions: Mission[];
   level: Level;
-  currentXp: number;
   hasTerminal: boolean;
   hasShop: boolean;
 }
 
 export interface Level {
   level: number;
+  currentXp: number;
   levelXp: number;
 }
 
@@ -49,9 +49,9 @@ export class UserService {
       ],
       level: {
         level: 1,
+        currentXp: 0,
         levelXp: this._nextLevel(1),
       },
-      currentXp: 0,
       hasTerminal: false,
       hasShop: false,
     };
@@ -97,7 +97,7 @@ export class UserService {
     this.saveUser(user);
   }
 
-  addProduct(shopItem: ShopItem) {
+  addProduct(shopItem: TreeNode) {
     let user = this.getUser()!;
     user?.purchasedProduct.unshift(shopItem);
     this.saveUser(user);
@@ -105,7 +105,7 @@ export class UserService {
 
   hasProduct(productName: string) {
     let index = this.getUser()?.purchasedProduct.findIndex((item) => {
-      return item.name.toLowerCase() === productName.toLowerCase();
+      return item.label?.toLowerCase() === productName.toLowerCase();
     });
 
     return index! >= 0 ? true : false;
@@ -120,17 +120,17 @@ export class UserService {
   }
 
   getCurrentXP() {
-    return this.user?.currentXp;
+    return this.user?.level.currentXp;
   }
 
   updateCurrentXP(value: number) {
     let user = this.getUser()!;
-    user.currentXp += value;
+    user.level.currentXp += value;
 
-    if (user.currentXp >= user.level.levelXp) {
+    if (user.level.currentXp >= user.level.levelXp) {
       user.level.level += 1;
       user.level.levelXp = this._nextLevel(user.level.level);
-      user.currentXp = 0;
+      user.level.currentXp = 0;
     }
 
     this.saveUser(user);

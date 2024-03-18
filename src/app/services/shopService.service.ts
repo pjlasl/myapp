@@ -1,6 +1,22 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from './storageService.service';
-import { ShopItem } from '../interfaces/shopItem.interface';
+import { TreeNode } from 'primeng/api';
+
+export interface ShopItem {
+  id: number;
+  name: string;
+  description: string;
+  rating: number;
+  versions: VersionInfo[];
+}
+
+export interface VersionInfo {
+  id: number;
+  version: number;
+  versionRequirement: number;
+  price: number;
+  purchased: boolean;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -10,99 +26,29 @@ export class ShopService {
 
   ngOnInit() {}
 
-  getShopItems() {
-    let list: ShopItem[] = [];
-
-    if (this.storageService.getLocalData('shopItems')) {
-      list = JSON.parse(this.storageService.getLocalData('shopItems'));
-    } else {
-      list = [
-        {
-          id: 0,
-          name: 'Terminal',
-          description:
-            'This software is used to scan for nearby networks. For educational use only.',
-          versions: [
-            {
-              id: 0,
-              version: 1,
-              price: 25,
-              purchased: false,
-              versionRequirement: 0,
-            },
-          ],
-        },
-        {
-          id: 1,
-          name: 'PortHack',
-          description:
-            'Use this tool to gain administrative rights on a network. For educational use only.',
-          versions: [
-            {
-              id: 0,
-              version: 1,
-              price: 500,
-              purchased: true,
-              versionRequirement: 0,
-            },
-          ],
-        },
-        {
-          id: 2,
-          name: 'Device Sniffer',
-          description:
-            'Use this tool to find devices on the connected network.',
-          versions: [
-            {
-              id: 0,
-              version: 1,
-              price: 500,
-              purchased: true,
-              versionRequirement: 0,
-            },
-          ],
-        },
-        {
-          id: 3,
-          name: 'HappyFace',
-          description:
-            'If installed on a device, there is a small profit in return.',
-          versions: [
-            {
-              id: 0,
-              version: 1,
-              price: 500,
-              purchased: true,
-              versionRequirement: 0,
-            },
-          ],
-        },
-      ];
-
-      this.storageService.saveLocalData('shopItems', JSON.stringify(list));
-    }
-
-    return list;
-  }
-
   getShopItemByName(name: string) {
-    let shopItem: ShopItem | undefined;
-
-    shopItem = this.getShopItems().find((item) => {
-      return item.name === name;
-    });
-
-    return shopItem;
+    // let shopItem: TreeNode | undefined;
+    // shopItem = this.getShopItemsv2().find((item) => {
+    //   return item.name === name;
+    // });
+    // return shopItem;
   }
 
-  getShopItem(id: number) {
-    let list: ShopItem[] = [];
-    list = this.getShopItems();
-    return list.filter((item) => item.id === id)[0];
+  getShopItemById(key: string) {
+    let list: TreeNode[] = [];
+    list = this.getShopItemsv2();
+
+    return list.filter((parent) => {
+      parent.children?.forEach((item) => {
+        return item.key === key;
+      });
+    })[0];
   }
+
+  getShopItemAddonByName(name: string) {}
 
   getShopItemsv2() {
-    return [
+    let list: TreeNode[] = [
       {
         key: '0',
         label: 'Programs',
@@ -116,8 +62,12 @@ export class ShopService {
             data: {
               id: 0,
               name: 'Terminal',
-              description:
-                'This sofware is designed to scan for nearby networks. Its use should be stricly used for educational purposes only.',
+              description: `
+                "Terminal" was designed by a computer software engineer to assist him scanning for networks that could be used for nepharious reasons. 
+                The program scans nearby networks and provides the following: Network name, IP address, and the security protocol associated to the network. 
+                The original author has released as open source with the disclaimer that it should only be used for educational purposes only. 
+                `,
+              rating: 4,
               version: [
                 {
                   id: 0,
@@ -140,7 +90,7 @@ export class ShopService {
                       version: 1,
                       versionRequirement: 0,
                       price: 0,
-                      purchased: false,
+                      purchased: true,
                     },
                   ],
                 },
@@ -156,7 +106,7 @@ export class ShopService {
                       version: 1,
                       versionRequirement: 0,
                       price: 0,
-                      purchased: false,
+                      purchased: true,
                     },
                   ],
                 },
@@ -172,7 +122,7 @@ export class ShopService {
                       version: 1,
                       versionRequirement: 0,
                       price: 0,
-                      purchased: false,
+                      purchased: true,
                     },
                   ],
                 },
@@ -197,6 +147,40 @@ export class ShopService {
           },
         ],
       },
+      {
+        key: '1',
+        label: 'scripts',
+        icon: 'fas fa-file-code',
+        data: 'Scripts folder',
+        children: [
+          {
+            key: '1-1',
+            label: 'HappyDayz',
+            icon: 'fas fa-scroll',
+            data: {
+              id: 0,
+              name: 'HappyDayz',
+              description: `
+                This script provides a very small return of investment when uploaded to a device. It is not much, but beggars cannot be choosers.
+              `,
+              rating: 1,
+              version: [
+                {
+                  id: 0,
+                  version: 1,
+                  versionRequirment: 0,
+                  price: 0,
+                  purchased: false,
+                },
+              ],
+            },
+          },
+        ],
+      },
     ];
+
+    this.storageService.saveLocalData('shopItems', JSON.stringify(list));
+
+    return list;
   }
 }

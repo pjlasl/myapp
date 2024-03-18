@@ -5,7 +5,7 @@ import {
   Network,
   NetworkService,
 } from 'src/app/services/networkService.service';
-import { MyComputer } from '../myComputer/myComputer.component';
+import { MyComputer } from './myComputer/myComputer.component';
 import { StorageService } from 'src/app/services/storageService.service';
 import { UserService } from 'src/app/services/userService.service';
 

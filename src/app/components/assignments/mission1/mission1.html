@@ -4,4 +4,51 @@
     [missionActive]="active"
     (onClick)="openEmail(email.id)"
   ></email-row-item>
+
+  <ng-template #step1>
+    <div class="flex-column">
+      <div
+        class="flex-row"
+        style="
+          flex: 1;
+          border-top: 1px solid var(--surface-border);
+          border-bottom: 1px solid var(--surface-border);
+          margin: 0.5em 0;
+        "
+      >
+        <p-button
+          [plain]="true"
+          [text]="true"
+          (click)="sendReply1()"
+          [disabled]="email.actionComplete"
+          label="Reply"
+          icon="fas fa-reply"
+        >
+        </p-button>
+      </div>
+      <div class="flex-column" style="gap: 0.5em">
+        <span>Hi Dear,</span>
+        <span>
+          I heard about your recent job loss, and I want you to know that I am
+          here for you. Please don't hesitate to lean on me during this
+          challenging time. I understand how difficult it can be to navigate
+          financial uncertainties, so I want to offer my support in any way I
+          can.
+        </span>
+        <span>
+          I know that rent and groceries can be significant expenses, so please
+          allow me to help alleviate some of that burden. I would like to
+          contribute to your rent and help with groceries for as long as you
+          need it. Your well-being is my priority, and I hope this support can
+          provide you with some relief as you work through this transition.
+        </span>
+        <span>
+          Remember, you are not alone in this. I love you dearly, and I am
+          always here to offer my love, support, and encouragement. Reply
+          letting me know you are okay with me sending you the money.
+        </span>
+        <span>Love, Grandma</span>
+      </div>
+    </div>
+  </ng-template>
 </div>

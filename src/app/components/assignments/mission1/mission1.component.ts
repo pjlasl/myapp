@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EmailModal } from '../../email/modal/email.component';
 import { CommonModule } from '@angular/common';
@@ -6,12 +6,12 @@ import { Email } from '../../email/emailClient.component';
 import { MissionService } from 'src/app/services/missionService.service';
 import { UserService } from 'src/app/services/userService.service';
 import { EmailRow } from '../../email/emailRow/emailRow.component';
-
+import { ButtonModule } from 'primeng/button';
 @Component({
   templateUrl: './mission1.html',
   standalone: true,
   providers: [DialogService],
-  imports: [CommonModule, EmailRow],
+  imports: [CommonModule, EmailRow, ButtonModule],
 })
 export class Mission1 {
   @Input() id: number = 0;
@@ -19,7 +19,10 @@ export class Mission1 {
   @Input() complete: boolean = false;
   @Input() emails: Email[] | undefined;
 
-  ref: DynamicDialogRef | undefined;
+  ref!: DynamicDialogRef;
+  activeEmail!: Email;
+
+  @ViewChild('step1') step1!: ElementRef;
 
   constructor(
     private dialogService: DialogService,
@@ -34,55 +37,48 @@ export class Mission1 {
           id: 0,
           from: 'Grandma',
           email: 'jolene.mayer@somemail.com',
-          date: new Date(),
           topic: 'Somthing to get you back on your feet...',
-          body: `
-          <p>I heard about your recent job loss, and I want you to know that I am here for you. Please don't hesitate to lean on me during 
-          this challenging time. I understand how difficult it can be to navigate financial uncertainties, 
-          so I want to offer my support in any way I can.</p>
-          <p>I know that rent and groceries can be significant expenses, so please allow me to help alleviate some of that burden. I would 
-          like to contribute to your rent and help with groceries for as long as you need it. Your well-being is my priority, and I hope 
-          this support can provide you with some relief as you work through this transition.</p>          
-          <p>Remember, you are not alone in this. I love you dearly, and I am always here to offer my love, support, and encouragement. Reply 
-          letting me know you are oke with me sending you the mone.</p>
-          <p>Love, Grandma
-            `,
           visible: true,
-          showFooter: true,
+          read: false,
+          actionComplete: false,
         },
         {
           id: 1,
           from: 'Grandma',
           email: 'jolene.mayer@somemail.com',
-          date: new Date(),
           topic: 'Money transferred',
           showFooter: false,
           body: `<p>Hi Dear,</p>
                  <p>Just a quick note to let you know that I've transferred the money for rent and groceries as discussed. It should be in your account now.</p>        
                  <p>Take care, and remember, I'm here for you.</p>
                  <p>Love, Grandma</p>`,
+          read: false,
+          actionComplete: true,
         },
       ];
     }
   }
 
   openEmail(id: number) {
-    let email = this.getEmail(id);
+    this.activeEmail = this.getEmail(id);
+    let template: ElementRef | undefined;
+
+    switch (id) {
+      case 0:
+        template = this.step1;
+        break;
+    }
 
     this.ref = this.dialogService.open(EmailModal, {
       showHeader: false,
       width: '40vw',
       data: {
-        email: email,
-        test: undefined,
+        email: this.activeEmail,
+        test: template,
       },
     });
 
-    this.ref.onClose.subscribe((data: Email) => {
-      if (data) {
-        this.sendVenmo();
-      }
-    });
+    this.ref.onClose.subscribe((data: Email) => {});
   }
 
   getEmail(id: number) {
@@ -93,8 +89,11 @@ export class Mission1 {
     return email;
   }
 
-  sendVenmo() {
+  sendReply1() {
     this.userService.updateWallet(25);
+
+    this.activeEmail.actionComplete = true;
+
     let email = this.getEmail(1);
     email.visible = true;
     this.complete = true;

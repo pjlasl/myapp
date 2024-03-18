@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { ShopItem, VersionInfo } from 'src/app/interfaces/shopItem.interface';
-import { ShopService } from 'src/app/services/shopService.service';
+import {
+  ShopItem,
+  VersionInfo,
+  ShopService,
+} from 'src/app/services/shopService.service';
 import { User, UserService } from 'src/app/services/userService.service';
 import { ComponentBridgeService } from 'src/app/services/componentBridgeService.service';
 import { TreeNode } from 'primeng/api';
@@ -11,8 +14,8 @@ import { TreeNode } from 'primeng/api';
 })
 export class Shop {
   user: User | undefined;
-  shopItems: ShopItem[] = [];
-  showItemsv2!: TreeNode[];
+
+  shopItemsv2!: TreeNode[];
   selectedFile!: TreeNode;
 
   constructor(
@@ -29,21 +32,7 @@ export class Shop {
       this.componentBridgeService.updateSidebar(this.user!);
     }
 
-    this.shopItems = this.shopService.getShopItems();
-    this.showItemsv2 = this.shopService.getShopItemsv2();
-  }
-
-  purchaseItem(shopItem: ShopItem, version: VersionInfo) {
-    shopItem.versions[version.id].purchased = true;
-
-    this.userService.updateWallet(-25);
-    this.userService.addProduct(shopItem);
-
-    this.user = this.userService.getUser()!;
-    this.user!.hasTerminal = true;
-    this.userService.saveUser(this.user!);
-
-    this.componentBridgeService.updateSidebar(this.user!);
+    this.shopItemsv2 = this.shopService.getShopItemsv2();
   }
 
   displayDetail(event: any) {

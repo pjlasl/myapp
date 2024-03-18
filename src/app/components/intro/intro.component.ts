@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { LoginModal } from '../modals/login/login.component';
+import { LoginModal } from './login/login.component';
 import { UserService } from 'src/app/services/userService.service';
 import { Router } from '@angular/router';
 

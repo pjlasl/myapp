@@ -1,21 +1,38 @@
 import { Component, Input } from '@angular/core';
 import { ComponentBridgeService } from 'src/app/services/componentBridgeService.service';
-import { Devices } from 'src/app/interfaces/device.interface';
 import { ChanceService } from 'src/app/services/chanceService.service';
 import { DeviceService } from 'src/app/services/deviceService.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MyComputer } from '../myComputer/myComputer.component';
-import { UserService } from 'src/app/services/userService.service';
+import { User, UserService } from 'src/app/services/userService.service';
 import { Network } from 'src/app/services/networkService.service';
-import { Level } from '../../services/userService.service';
+
+export interface Devices {
+  id: number;
+  name: string;
+  icon: string;
+  address?: string;
+  affected?: boolean;
+  allowContent?: boolean;
+  deviceContent?: DeviceContent[];
+}
+
+export interface DeviceContent {
+  id?: number;
+  name: string;
+  value?: number;
+  icon: string;
+  downloaded?: boolean;
+}
+
 @Component({
-  selector: 'device',
+  selector: 'device-console',
   templateUrl: './device.html',
   styleUrls: ['./device.component.css'],
   providers: [DialogService],
 })
-export class Device {
-  user: any;
+export class DeviceConsole {
+  user!: User;
   connectedNetwork!: Network;
   foundDevices: any[] = [];
   isPortHack: boolean = false;
@@ -30,7 +47,7 @@ export class Device {
   ) {}
 
   ngOnInit() {
-    this.user = this.userService.getUser();
+    this.user = this.userService.getUser()!;
     this.subscribeDeviceUpdate();
   }
 
@@ -78,8 +95,6 @@ export class Device {
         ...this.deviceService.generateDevice(),
       });
     }
-
-    console.log(this.foundDevices);
   }
 
   onVirusUpload(device: Devices) {

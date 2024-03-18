@@ -5,6 +5,41 @@
     (onClick)="openEmail(email.id)"
   ></email-row-item>
 
+  <ng-template #step1>
+    <div class="flex-column">
+      <div
+        class="flex-row"
+        style="
+          flex: 1;
+          border-top: 1px solid var(--surface-border);
+          border-bottom: 1px solid var(--surface-border);
+          margin: 0.5em 0;
+        "
+      >
+        <p-button
+          [plain]="true"
+          [text]="true"
+          (click)="sendReply1()"
+          [disabled]="email.actionComplete"
+          label="Reply"
+          icon="fas fa-reply"
+        >
+        </p-button>
+      </div>
+      <div class="flex-column" style="gap: 0.5em">
+        <span> Hey Bro! </span>
+        <span>
+          Hope you're hanging in there! I came across this opportunity that
+          could help us make some quick cash, ut I gotta be upfront - it's a bit
+          risky. There's potential for big returns, but we need to weigh the
+          pros and cons carefully before jumping in. Let me know if you're
+          interested, and we can discuss it further.
+        </span>
+        <span> Cheers, Jack </span>
+      </div>
+    </div>
+  </ng-template>
+
   <ng-template #step2>
     <div class="flex-column">
       <div>

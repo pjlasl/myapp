@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { DeviceContent } from 'src/app/interfaces/deviceContent.interface';
+import { DeviceContent } from '../device/device.component';
 import { StorageService } from 'src/app/services/storageService.service';
 import { UserService } from 'src/app/services/userService.service';
 
