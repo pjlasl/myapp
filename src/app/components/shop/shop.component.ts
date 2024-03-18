@@ -3,6 +3,7 @@ import { ShopItem, VersionInfo } from 'src/app/interfaces/shopItem.interface';
 import { ShopService } from 'src/app/services/shopService.service';
 import { User, UserService } from 'src/app/services/userService.service';
 import { ComponentBridgeService } from 'src/app/services/componentBridgeService.service';
+import { TreeNode } from 'primeng/api';
 
 @Component({
   selector: 'shop',
@@ -11,6 +12,8 @@ import { ComponentBridgeService } from 'src/app/services/componentBridgeService.
 export class Shop {
   user: User | undefined;
   shopItems: ShopItem[] = [];
+  showItemsv2!: TreeNode[];
+  selectedFile!: TreeNode;
 
   constructor(
     private shopService: ShopService,
@@ -27,6 +30,7 @@ export class Shop {
     }
 
     this.shopItems = this.shopService.getShopItems();
+    this.showItemsv2 = this.shopService.getShopItemsv2();
   }
 
   purchaseItem(shopItem: ShopItem, version: VersionInfo) {
@@ -40,5 +44,11 @@ export class Shop {
     this.userService.saveUser(this.user!);
 
     this.componentBridgeService.updateSidebar(this.user!);
+  }
+
+  displayDetail(event: any) {
+    if (event.node.parent) {
+      this.selectedFile = event.node;
+    }
   }
 }

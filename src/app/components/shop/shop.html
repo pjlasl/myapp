@@ -10,20 +10,41 @@
     <span style="font-size: large; font-weight: 600"> Shop-A-Lot </span>
   </div>
   <div class="flex-column">
-    <div
-      class="flex-row"
-      style="padding: 0.8em; background-color: var(--surface-ground)"
-    >
-      <span style="font-weight: 600"> Programs: </span>
+    <div class="flex-row">
+      <div style="flex: 0.2">
+        <p-tree
+          [value]="showItemsv2"
+          selectionMode="single"
+          (onNodeSelect)="displayDetail($event)"
+          [style]="{'border': '0', 'padding':'0'}"
+        >
+          <ng-template let-node pTemplate="default">
+            <div class="flex-row" *ngIf="!node.parent" style="gap: 0.5em">
+              <span> {{node.label}} </span>
+              <span style="font-weight: 600">
+                ({{node?.children?.length}})
+              </span>
+            </div>
+            <div *ngIf="node.parent">{{node.label}}</div>
+          </ng-template>
+        </p-tree>
+      </div>
+      <div *ngIf="selectedFile" style="flex: 0.8">
+        <shop-item-detail [shopItem]="selectedFile"></shop-item-detail>
+      </div>
     </div>
 
-    <div class="flex-column" *ngFor="let shopItem of shopItems">
+    <!-- <div
+      class="flex-column"
+      *ngFor="let shopItem of shopItems"
+      style="padding: 0.5em"
+    >
       <div class="flex-row" style="align-items: center">
         <div class="flex-row" style="align-items: center; padding: 0.8em">
-          <i class="fas fa-gift fa-lg"></i>
+          <i class="fas fa-file-invoice fa-lg"></i>
         </div>
         <div class="flex-column">
-          <span> {{shopItem.name}} </span>
+          <span style="font-size: larger"> {{shopItem.name}} </span>
           <span style="font-size: smaller; color: var(--gray-500)">
             {{shopItem.description}}
           </span>
@@ -51,6 +72,6 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>

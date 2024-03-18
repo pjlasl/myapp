@@ -21,12 +21,15 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { RatingModule } from 'primeng/rating';
+import { DividerModule } from 'primeng/divider';
 
 import { Intro } from './components/intro/intro.component';
 import { Header } from './components/header/header.component';
 import { SideBar } from './components/sidebar/sidebar.component';
 import { Terminal } from './components/terminal/terminal.component';
 import { Shop } from './components/shop/shop.component';
+import { ShopItemDetail } from './components/shop/itemDetail/itemDetail.component';
 import { Device } from './components/device/device.component';
 import { MyComputer } from './components/myComputer/myComputer.component';
 
@@ -50,6 +53,7 @@ import { MissionService } from './services/missionService.service';
     SideBar,
     Terminal,
     Shop,
+    ShopItemDetail,
     Device,
     EmailModal,
     MyComputer,
@@ -76,6 +80,8 @@ import { MissionService } from './services/missionService.service';
     FormsModule,
     ReactiveFormsModule,
     OverlayPanelModule,
+    RatingModule,
+    DividerModule,
   ],
   providers: [
     ChanceService,
