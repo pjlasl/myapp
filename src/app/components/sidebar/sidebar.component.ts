@@ -28,4 +28,8 @@ export class SideBar {
       },
     );
   }
+
+  hasTerminal() {
+    return this.userService.hasProduct('terminal');
+  }
 }

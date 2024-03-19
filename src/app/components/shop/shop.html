@@ -13,7 +13,7 @@
     <div class="flex-row">
       <div style="flex: 0.2">
         <p-tree
-          [value]="showItemsv2"
+          [value]="shopItemsv2"
           selectionMode="single"
           (onNodeSelect)="displayDetail($event)"
           [style]="{'border': '0', 'padding':'0'}"
@@ -33,45 +33,5 @@
         <shop-item-detail [shopItem]="selectedFile"></shop-item-detail>
       </div>
     </div>
-
-    <!-- <div
-      class="flex-column"
-      *ngFor="let shopItem of shopItems"
-      style="padding: 0.5em"
-    >
-      <div class="flex-row" style="align-items: center">
-        <div class="flex-row" style="align-items: center; padding: 0.8em">
-          <i class="fas fa-file-invoice fa-lg"></i>
-        </div>
-        <div class="flex-column">
-          <span style="font-size: larger"> {{shopItem.name}} </span>
-          <span style="font-size: smaller; color: var(--gray-500)">
-            {{shopItem.description}}
-          </span>
-        </div>
-      </div>
-      <div class="flex-column" style="gap: 0.8em">
-        <span style="text-decoration: underline"> Available Versions: </span>
-        <div
-          class="flex-row"
-          style="align-items: center; gap: 0.8em"
-          *ngFor="let version of shopItem.versions"
-        >
-          <span style="flex: 0.2"> Version: {{version.version}} </span>
-          <span style="flex: 0.05; text-align: right">
-            ${{version.price}}
-          </span>
-          <div>
-            <p-button
-              [rounded]="true"
-              icon="fas fa-money-bill-1"
-              [disabled]="version.purchased"
-              (click)="purchaseItem(shopItem, version)"
-            >
-            </p-button>
-          </div>
-        </div>
-      </div>
-    </div> -->
   </div>
 </div>

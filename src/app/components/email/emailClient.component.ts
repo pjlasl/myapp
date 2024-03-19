@@ -9,11 +9,12 @@ export interface Email {
   id: number;
   from: string;
   email: string;
-  date: Date;
   topic: string;
+  read: boolean;
   body?: string;
   visible?: boolean;
   showFooter?: boolean;
+  actionComplete: boolean;
 }
 
 @Component({

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Devices } from '../interfaces/device.interface';
-import { DeviceContent } from '../interfaces/deviceContent.interface';
+import { Devices } from '../components/terminal/device/device.component';
+import { DeviceContent } from '../components/terminal/device/device.component';
 import { ChanceService } from './chanceService.service';
 
 @Injectable({

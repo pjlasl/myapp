@@ -19,11 +19,13 @@
         <i class="fas fa-id-badge"></i>
       </span>
       <span style="cursor: pointer" (click)="userLevel.toggle($event)">
-        {{user?.level?.level}}
+        {{user?.getCurrentLevel()}}
       </span>
       <p-overlayPanel #userLevel>
         <div class="flex-column">
-          <span> {{user?.currentXp}} / {{user?.level?.levelXp}} </span>
+          <span>
+            {{user?.getCurrentXp()}} / {{user?.getCurrentLevelXp()}}
+          </span>
         </div>
       </p-overlayPanel>
     </div>
@@ -31,7 +33,7 @@
       <span>
         <i class="fas fa-dollar"></i>
       </span>
-      <span style="font-weight: 600">{{user?.cash ? user?.cash : '0'}}</span>
+      <span style="font-weight: 600">{{user?.getMoney()}}</span>
     </div>
     <span (click)="showEmail()">
       <i class="pi pi-envelope"></i>

@@ -1,21 +1,42 @@
 import { Component, Input } from '@angular/core';
 import { ComponentBridgeService } from 'src/app/services/componentBridgeService.service';
-import { Devices } from 'src/app/interfaces/device.interface';
 import { ChanceService } from 'src/app/services/chanceService.service';
 import { DeviceService } from 'src/app/services/deviceService.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MyComputer } from '../myComputer/myComputer.component';
-import { UserService } from 'src/app/services/userService.service';
+import { User, UserService } from 'src/app/services/userService.service';
 import { Network } from 'src/app/services/networkService.service';
-import { Level } from '../../services/userService.service';
+import { ShopItemEntity } from 'src/app/entities/shopItem.entity';
+import { UserEntity } from 'src/app/entities/user.entity';
+
+export interface Devices {
+  id: number;
+  name: string;
+  icon: string;
+  address?: string;
+  affected?: boolean;
+  allowContent?: boolean;
+  deviceContent?: DeviceContent[];
+}
+
+export interface DeviceContent {
+  id?: number;
+  name: string;
+  value?: number;
+  icon: string;
+  downloaded?: boolean;
+}
+
 @Component({
-  selector: 'device',
+  selector: 'device-console',
   templateUrl: './device.html',
   styleUrls: ['./device.component.css'],
   providers: [DialogService],
 })
-export class Device {
-  user: any;
+export class DeviceConsole {
+  @Input() user!: UserEntity;
+  @Input() terminal!: ShopItemEntity;
+
   connectedNetwork!: Network;
   foundDevices: any[] = [];
   isPortHack: boolean = false;
@@ -30,7 +51,6 @@ export class Device {
   ) {}
 
   ngOnInit() {
-    this.user = this.userService.getUser();
     this.subscribeDeviceUpdate();
   }
 
@@ -66,7 +86,8 @@ export class Device {
     setTimeout(() => {
       this.isPortHack = false;
       this.connectedNetwork.open = true;
-      this.userService.updateCurrentXP(50);
+      this.user.addXp(50);
+      this.userService.saveUser(this.user);
     }, 5000);
   }
 
@@ -78,13 +99,12 @@ export class Device {
         ...this.deviceService.generateDevice(),
       });
     }
-
-    console.log(this.foundDevices);
   }
 
   onVirusUpload(device: Devices) {
     device.affected = true;
-    this.userService.updateWallet(1);
+    this.user.addMoney(this.terminal.getScriptsTotalValue());
+    this.userService.saveUser(this.user);
   }
 
   openDevice(device: Devices) {

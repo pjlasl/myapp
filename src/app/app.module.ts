@@ -23,6 +23,9 @@ import { PasswordModule } from 'primeng/password';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { RatingModule } from 'primeng/rating';
 import { DividerModule } from 'primeng/divider';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { MessagesModule } from 'primeng/messages';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { Intro } from './components/intro/intro.component';
 import { Header } from './components/header/header.component';
@@ -30,10 +33,10 @@ import { SideBar } from './components/sidebar/sidebar.component';
 import { Terminal } from './components/terminal/terminal.component';
 import { Shop } from './components/shop/shop.component';
 import { ShopItemDetail } from './components/shop/itemDetail/itemDetail.component';
-import { Device } from './components/device/device.component';
-import { MyComputer } from './components/myComputer/myComputer.component';
+import { DeviceConsole } from './components/terminal/device/device.component';
+import { MyComputer } from './components/terminal/myComputer/myComputer.component';
 
-import { LoginModal } from './components/modals/login/login.component';
+import { LoginModal } from './components/intro/login/login.component';
 import { EmailModal } from './components/email/modal/email.component';
 
 import { ChanceService } from './services/chanceService.service';
@@ -54,7 +57,7 @@ import { MissionService } from './services/missionService.service';
     Terminal,
     Shop,
     ShopItemDetail,
-    Device,
+    DeviceConsole,
     EmailModal,
     MyComputer,
     LoginModal,
@@ -82,6 +85,9 @@ import { MissionService } from './services/missionService.service';
     OverlayPanelModule,
     RatingModule,
     DividerModule,
+    InputSwitchModule,
+    MessagesModule,
+    ProgressSpinnerModule,
   ],
   providers: [
     ChanceService,

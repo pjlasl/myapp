@@ -1,108 +1,170 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from './storageService.service';
-import { ShopItem } from '../interfaces/shopItem.interface';
+import { TreeNode } from 'primeng/api';
+
+export interface ShopItem {
+  id: number;
+  name: string;
+  description: string;
+  rating: number;
+  versions: VersionInfo[];
+  addons?: ShopItem[];
+  scripts?: ShopItem[];
+  flagged?: boolean;
+  generatedValue?: number;
+}
+
+export interface VersionInfo {
+  id: number;
+  version: number;
+  versionRequirement: number;
+  price: number;
+  purchased: boolean;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShopService {
+  addonsList: ShopItem[] = [
+    {
+      id: 0,
+      name: 'Port Hack',
+      description:
+        'This addon gives the user of the Terminal program administrative access to the network.',
+      flagged: true,
+      rating: 0,
+      versions: [
+        {
+          id: 0,
+          version: 1,
+          versionRequirement: 0,
+          price: 0,
+          purchased: true,
+        },
+      ],
+    },
+    {
+      id: 1,
+      name: 'Device Sniffer',
+      description: 'This addon identifies devices on the connected network.',
+      rating: 0,
+      versions: [
+        {
+          id: 0,
+          version: 1,
+          versionRequirement: 0,
+          price: 0,
+          purchased: true,
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: 'File Uploader',
+      description:
+        'This addon allows an administrator to upload files to devices connected to the network.',
+      flagged: true,
+      rating: 0,
+      versions: [
+        {
+          id: 0,
+          version: 1,
+          versionRequirement: 0,
+          price: 0,
+          purchased: true,
+        },
+      ],
+    },
+    {
+      id: 3,
+      name: 'Device Explorer',
+      description:
+        'This addon allows an administrator to view files on a device and download them.',
+      flagged: true,
+      rating: 0,
+      versions: [
+        {
+          id: 0,
+          version: 1,
+          versionRequirement: 0,
+          price: 75,
+          purchased: false,
+        },
+      ],
+    },
+  ];
+
+  scriptsList: ShopItem[] = [
+    {
+      id: 0,
+      name: 'HappyDayz',
+      description: `
+        This script provides a very small return of investment when uploaded to a device. It is not much, but beggars cannot be choosers.
+      `,
+      rating: 1,
+      generatedValue: 1,
+      versions: [
+        {
+          id: 0,
+          version: 1,
+          versionRequirement: 0,
+          price: 0,
+          purchased: false,
+        },
+      ],
+    },
+    {
+      id: 0,
+      name: 'HappyNitz',
+      description: `
+        This script is a later version of HappyDayz containing some improvements to the code that produces a better return on investment.
+      `,
+      rating: 1,
+      generatedValue: 1,
+      versions: [
+        {
+          id: 0,
+          version: 1,
+          versionRequirement: 0,
+          price: 10,
+          purchased: false,
+        },
+      ],
+    },
+  ];
   constructor(private storageService: StorageService) {}
 
   ngOnInit() {}
 
-  getShopItems() {
-    let list: ShopItem[] = [];
-
-    if (this.storageService.getLocalData('shopItems')) {
-      list = JSON.parse(this.storageService.getLocalData('shopItems'));
-    } else {
-      list = [
-        {
-          id: 0,
-          name: 'Terminal',
-          description:
-            'This software is used to scan for nearby networks. For educational use only.',
-          versions: [
-            {
-              id: 0,
-              version: 1,
-              price: 25,
-              purchased: false,
-              versionRequirement: 0,
-            },
-          ],
-        },
-        {
-          id: 1,
-          name: 'PortHack',
-          description:
-            'Use this tool to gain administrative rights on a network. For educational use only.',
-          versions: [
-            {
-              id: 0,
-              version: 1,
-              price: 500,
-              purchased: true,
-              versionRequirement: 0,
-            },
-          ],
-        },
-        {
-          id: 2,
-          name: 'Device Sniffer',
-          description:
-            'Use this tool to find devices on the connected network.',
-          versions: [
-            {
-              id: 0,
-              version: 1,
-              price: 500,
-              purchased: true,
-              versionRequirement: 0,
-            },
-          ],
-        },
-        {
-          id: 3,
-          name: 'HappyFace',
-          description:
-            'If installed on a device, there is a small profit in return.',
-          versions: [
-            {
-              id: 0,
-              version: 1,
-              price: 500,
-              purchased: true,
-              versionRequirement: 0,
-            },
-          ],
-        },
-      ];
-
-      this.storageService.saveLocalData('shopItems', JSON.stringify(list));
-    }
-
-    return list;
-  }
-
   getShopItemByName(name: string) {
-    let shopItem: ShopItem | undefined;
-
-    shopItem = this.getShopItems().find((item) => {
-      return item.name === name;
-    });
+    let shopItem: ShopItem;
+    shopItem = this.getShopItemsv2()
+      .find((item) => {
+        return item.label === 'Programs';
+      })
+      ?.children![0].data.addons.find((addon: any) => {
+        return addon.name === name;
+      });
 
     return shopItem;
   }
 
-  getShopItem(id: number) {
-    let list: ShopItem[] = [];
-    list = this.getShopItems();
-    return list.filter((item) => item.id === id)[0];
+  getShopItemById(key: string) {
+    let list: TreeNode[] = [];
+    list = this.getShopItemsv2();
+
+    return list.filter((parent) => {
+      parent.children?.forEach((item) => {
+        return item.key === key;
+      });
+    })[0];
   }
 
+  getShopItemAddonByName(name: string) {}
+
   getShopItemsv2() {
-    return [
+    let list: TreeNode[] = [
       {
         key: '0',
         label: 'Programs',
@@ -116,9 +178,13 @@ export class ShopService {
             data: {
               id: 0,
               name: 'Terminal',
-              description:
-                'This sofware is designed to scan for nearby networks. Its use should be stricly used for educational purposes only.',
-              version: [
+              description: `
+                "Terminal" was designed by a computer software engineer to assist him scanning for networks that could be used for nepharious reasons. 
+                The program scans nearby networks and provides the following: Network name, IP address, and the security protocol associated to the network. 
+                The original author has released as open source with the disclaimer that it should only be used for educational purposes only. 
+                `,
+              rating: 4,
+              versions: [
                 {
                   id: 0,
                   version: 1,
@@ -128,75 +194,40 @@ export class ShopService {
                 },
               ],
               addons: [
-                {
-                  id: 0,
-                  name: 'Port Hack',
-                  icon: 'fas fa-file-circle-plus',
-                  description:
-                    'This addon gives the user of the Terminal program administrative access to the network.',
-                  versions: [
-                    {
-                      id: 0,
-                      version: 1,
-                      versionRequirement: 0,
-                      price: 0,
-                      purchased: false,
-                    },
-                  ],
-                },
-                {
-                  id: 1,
-                  name: 'Device Sniffer',
-                  icon: 'fas fa-file-circle-plus',
-                  description:
-                    'This addon identifies devices on the connected network.',
-                  versions: [
-                    {
-                      id: 0,
-                      version: 1,
-                      versionRequirement: 0,
-                      price: 0,
-                      purchased: false,
-                    },
-                  ],
-                },
-                {
-                  id: 2,
-                  name: 'File Uploader',
-                  icon: 'fas fa-file-circle-plus',
-                  description:
-                    'This addon allows an administrator to upload files to devices connected to the network.',
-                  versions: [
-                    {
-                      id: 0,
-                      version: 1,
-                      versionRequirement: 0,
-                      price: 0,
-                      purchased: false,
-                    },
-                  ],
-                },
-                {
-                  id: 3,
-                  name: 'Device Explorer',
-                  icon: 'fas fa-file-circle-plus',
-                  description:
-                    'This addon allows an administrator to view files on a device and download them.',
-                  versions: [
-                    {
-                      id: 0,
-                      version: 1,
-                      versionRequirement: 0,
-                      price: 75,
-                      purchased: false,
-                    },
-                  ],
-                },
+                this.addonsList[0],
+                this.addonsList[1],
+                this.addonsList[2],
+                this.addonsList[3],
               ],
+              scripts: [],
             },
           },
         ],
       },
+      {
+        key: '1',
+        label: 'scripts',
+        icon: 'fas fa-file-code',
+        data: 'Scripts folder',
+        children: [
+          {
+            key: '1-1',
+            label: 'HappyDayz',
+            icon: 'fas fa-scroll',
+            data: this.scriptsList[0],
+          },
+          {
+            key: '1-2',
+            label: 'HappyNitz',
+            icon: 'fas fa-scroll',
+            data: this.scriptsList[1],
+          },
+        ],
+      },
     ];
+
+    this.storageService.saveLocalData('shopItems', JSON.stringify(list));
+
+    return list;
   }
 }

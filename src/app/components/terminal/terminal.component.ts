@@ -5,9 +5,11 @@ import {
   Network,
   NetworkService,
 } from 'src/app/services/networkService.service';
-import { MyComputer } from '../myComputer/myComputer.component';
+import { MyComputer } from './myComputer/myComputer.component';
 import { StorageService } from 'src/app/services/storageService.service';
 import { UserService } from 'src/app/services/userService.service';
+import { UserEntity } from 'src/app/entities/user.entity';
+import { ShopItemEntity } from 'src/app/entities/shopItem.entity';
 
 @Component({
   selector: 'terminal',
@@ -16,7 +18,10 @@ import { UserService } from 'src/app/services/userService.service';
 })
 export class Terminal {
   networks: Network[] = [];
-  ref: DynamicDialogRef | undefined;
+  ref!: DynamicDialogRef;
+  scanningNetwork: boolean = false;
+  user!: UserEntity;
+  terminal!: ShopItemEntity;
 
   constructor(
     private networkService: NetworkService,
@@ -26,17 +31,23 @@ export class Terminal {
     private userService: UserService,
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.user = new UserEntity(this.userService.getUser()!);
+    this.terminal = new ShopItemEntity(this.user.getProduct('terminal')!);
+  }
 
   onScan() {
     let scans: Network[] = [];
+
+    this.scanningNetwork = true;
     for (let i = 0; i < 4; i++) {
-      scans.push(
-        this.networkService.generate(this.userService.getUser()?.level.level!),
-      );
+      scans.push(this.networkService.generate(this.user.getCurrentLevel()));
     }
 
-    this.networks = [...scans];
+    setTimeout(() => {
+      this.networks = [...scans];
+      this.scanningNetwork = false;
+    }, 3000);
   }
 
   onConnect(network: Network) {

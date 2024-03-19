@@ -4,17 +4,20 @@ import { CommonModule } from '@angular/common';
 import { EmailRow } from '../../email/emailRow/emailRow.component';
 import { MissionService } from 'src/app/services/missionService.service';
 import { User, UserService } from 'src/app/services/userService.service';
-import { Assignment } from '../assignment.interface';
 import { Email } from '../../email/emailClient.component';
 import { EmailModal } from '../../email/modal/email.component';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { ShopService } from 'src/app/services/shopService.service';
+import { ShopItemEntity } from 'src/app/entities/shopItem.entity';
+import { MessagesModule } from 'primeng/messages';
+import { UserEntity } from 'src/app/entities/user.entity';
+
 @Component({
   templateUrl: '../mission2/mission2.html',
   standalone: true,
   providers: [DialogService],
-  imports: [CommonModule, EmailRow, ButtonModule],
+  imports: [CommonModule, EmailRow, ButtonModule, MessagesModule],
 })
 export class Mission2 {
   @Input() id: number = 0;
@@ -22,9 +25,11 @@ export class Mission2 {
   @Input() complete: boolean = false;
   @Input() emails: Email[] | undefined;
 
-  ref: DynamicDialogRef | undefined;
-  user: User | undefined;
+  ref!: DynamicDialogRef;
+  user!: UserEntity;
+  activeEmail!: Email;
 
+  @ViewChild('step1') step1!: ElementRef;
   @ViewChild('step2') step2!: ElementRef;
   @ViewChild('step3') step3!: ElementRef;
   @ViewChild('step4') step4!: ElementRef;
@@ -44,48 +49,42 @@ export class Mission2 {
           id: 0,
           from: 'Jack',
           email: 'jack.mayer@somemail.com',
-          date: new Date(),
+          read: false,
           topic: 'A business opportunity',
-          body: `
-          <p>Hey!</p>
-          
-          <p>Hope you're hanging in there! I came across this opportunity that could help us make some quick cash, but I gotta be upfront - it's a bit risky.
-          There's potential for big returns, but we need to weigh the pros and cons carefully before jumping in. Let me know if you're interested, and we can
-          discuss it further.</p>
-
-          <p>Cheers, Jack</p>
-          `,
           visible: true,
-          showFooter: true,
+          actionComplete: false,
         },
         {
           id: 1,
           from: 'Jack',
           email: 'jack.mayer@somemail.com',
-          date: new Date(),
+          read: false,
           topic: 'Welcome aboard',
           visible: false,
+          actionComplete: false,
         },
         {
           id: 2,
           from: 'Jack',
           email: 'jack.mayer@somemail.com',
-          date: new Date(),
+          read: false,
           topic: 'Environment Setup',
           visible: false,
+          actionComplete: false,
         },
         {
           id: 3,
           from: 'Jack',
           email: 'jack.mayer@somemail.com',
-          date: new Date(),
+          read: false,
           topic: "Let's get started!",
           visible: false,
+          actionComplete: false,
         },
       ];
     }
 
-    this.user = this.userService.getUser();
+    this.user = new UserEntity(this.userService.getUser()!);
   }
 
   getEmail(id: number) {
@@ -97,10 +96,13 @@ export class Mission2 {
   }
 
   openEmail(id: number) {
-    let email = this.getEmail(id);
+    this.activeEmail = this.getEmail(id);
     let template: ElementRef | undefined;
 
     switch (id) {
+      case 0:
+        template = this.step1;
+        break;
       case 1:
         template = this.step2;
         break;
@@ -116,73 +118,77 @@ export class Mission2 {
       showHeader: false,
       width: '40vw',
       data: {
-        email: email,
+        email: this.activeEmail,
         test: template,
       },
     });
 
-    this.ref.onClose.subscribe((data: Email) => {
-      if (data) {
-        switch (data.id) {
-          case 0:
-            this.sendReply1();
-            break;
-          case 1:
-            this.sendReply2();
-            break;
-        }
-      }
-    });
+    this.ref.onClose.subscribe((data: Email) => {});
   }
 
   sendReply1() {
+    this.activeEmail.actionComplete = true;
+
     let email = this.getEmail(1);
     email.visible = true;
 
     this.missionService.updateMission(this);
+
+    this.ref.close();
   }
 
   sendReply2() {
     if (this.userService.hasProduct('terminal')) {
+      this.activeEmail.actionComplete = true;
+
       let email = this.getEmail(2);
       email.visible = true;
 
       this.missionService.updateMission(this);
+      this.ref.close();
     }
   }
 
   sendReply3() {
+    this.user.addXp(100);
+    this.userService.saveUser(this.user);
+
     let email = this.getEmail(3);
     email.visible = true;
+    this.activeEmail.actionComplete = true;
     this.missionService.updateMission(this);
+    this.ref.close();
   }
 
   downloadAttachments() {
-    this.userService.addProduct(
-      this.shopService.getShopItemByName('PortHack')!,
-    );
-    this.userService.addProduct(
-      this.shopService.getShopItemByName('Device Sniffer')!,
-    );
-    this.userService.addProduct(
-      this.shopService.getShopItemByName('HappyFace')!,
-    );
+    let zipFile = {
+      addons: [this.shopService.addonsList[0], this.shopService.addonsList[1]],
+      scripts: [this.shopService.scriptsList[0]],
+    };
+
+    let product = new ShopItemEntity(this.user.getProduct('terminal')!);
+    product.addAddons(zipFile.addons);
+    product.addScripts(zipFile.scripts);
+
+    this.user.updateProduct(product.getItem());
+    this.userService.saveUser(this.user);
   }
 
   hasAttachments() {
-    let found = this.userService.hasProduct('PortHack');
-    found = this.userService.hasProduct('Device Sniffer');
-    found = this.userService.hasProduct('HappyFace');
+    let product = new ShopItemEntity(this.user.getProduct('terminal')!);
+
+    let found = product.hasAddon('Port Hack');
+    found = product.hasAddon('Device Sniffer');
+    found = product.hasScripts('HappyDayz');
     return found;
   }
 
   goToShop() {
     this.router.navigate(['shop']);
-    this.ref?.close();
+    this.ref.close();
   }
 
   hasTerminal() {
-    return;
     let response = this.userService.hasProduct('terminal');
     return !response;
   }
