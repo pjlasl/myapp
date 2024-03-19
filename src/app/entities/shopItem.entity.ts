@@ -42,7 +42,6 @@ export class ShopItemEntity implements ShopItem {
     let t = this.addons?.find(
       (item) => item.name.toLowerCase() === addonName.toLowerCase(),
     );
-    console.log(t);
     return t;
   }
 
