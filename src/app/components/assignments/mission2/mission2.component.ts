@@ -97,7 +97,7 @@ export class Mission2 {
 
   openEmail(id: number) {
     this.activeEmail = this.getEmail(id);
-    let template: ElementRef | undefined;
+    let template!: ElementRef;
 
     switch (id) {
       case 0:
@@ -123,7 +123,9 @@ export class Mission2 {
       },
     });
 
-    this.ref.onClose.subscribe((data: Email) => {});
+    this.ref.onClose.subscribe((data: Email) => {
+      console.log(data);
+    });
   }
 
   sendReply1() {
@@ -155,7 +157,9 @@ export class Mission2 {
 
     let email = this.getEmail(3);
     email.visible = true;
+
     this.activeEmail.actionComplete = true;
+
     this.missionService.updateMission(this);
     this.ref?.close();
   }
@@ -177,9 +181,9 @@ export class Mission2 {
   hasAttachments() {
     let product = new ShopItemEntity(this.user.getProduct('terminal')!);
 
-    let found = product.hasAddon('Port Hack');
-    found = product.hasAddon('Device Sniffer');
-    found = product.hasScripts('HappyDayz');
+    let found = product.hasAddon('Port Hack') ? true : false;
+    found = product.hasAddon('Device Sniffer') ? true : false;
+    found = product.hasScripts('HappyDayz') ? true : false;
     return found;
   }
 
