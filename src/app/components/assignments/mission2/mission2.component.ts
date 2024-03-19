@@ -25,7 +25,7 @@ export class Mission2 {
   @Input() complete: boolean = false;
   @Input() emails: Email[] | undefined;
 
-  ref!: DynamicDialogRef;
+  ref: DynamicDialogRef | undefined;
   user!: UserEntity;
   activeEmail!: Email;
 
@@ -134,7 +134,7 @@ export class Mission2 {
 
     this.missionService.updateMission(this);
 
-    this.ref.close();
+    this.ref?.close();
   }
 
   sendReply2() {
@@ -145,7 +145,7 @@ export class Mission2 {
       email.visible = true;
 
       this.missionService.updateMission(this);
-      this.ref.close();
+      this.ref?.close();
     }
   }
 
@@ -157,7 +157,7 @@ export class Mission2 {
     email.visible = true;
     this.activeEmail.actionComplete = true;
     this.missionService.updateMission(this);
-    this.ref.close();
+    this.ref?.close();
   }
 
   downloadAttachments() {
@@ -185,7 +185,7 @@ export class Mission2 {
 
   goToShop() {
     this.router.navigate(['shop']);
-    this.ref.close();
+    this.ref?.close();
   }
 
   hasTerminal() {
