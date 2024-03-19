@@ -3,6 +3,7 @@ import { ComponentBridgeService } from 'src/app/services/componentBridgeService.
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EmailModal } from '../email/modal/email.component';
 import { User, UserService } from 'src/app/services/userService.service';
+import { UserEntity } from 'src/app/entities/user.entity';
 
 @Component({
   selector: 'header',
@@ -10,9 +11,9 @@ import { User, UserService } from 'src/app/services/userService.service';
   providers: [DialogService],
 })
 export class Header {
-  user: User | undefined;
+  user!: UserEntity;
   cash: number = 0;
-  ref: DynamicDialogRef | undefined;
+  ref!: DynamicDialogRef;
 
   constructor(
     private componentBridgeService: ComponentBridgeService,
@@ -21,10 +22,10 @@ export class Header {
   ) {}
 
   ngOnInit() {
-    this.user = this.userService.getUser();
-    this.cash = this.userService.getWallet()
-      ? this.userService.getWallet()!
-      : 0;
+    if (this.userService.getUser()) {
+      this.user = new UserEntity(this.userService.getUser()!);
+      this.cash = this.user.getMoney();
+    }
 
     this.subscribeUserUpdate();
   }
@@ -32,7 +33,7 @@ export class Header {
   subscribeUserUpdate() {
     this.componentBridgeService.userUpdateDataObservable$.subscribe((data) => {
       if (data) {
-        this.user = data;
+        this.user = new UserEntity(data);
       }
     });
   }

@@ -34,10 +34,11 @@
         label="Buy Now"
         severity="warning"
         (click)="purchaseItem(shopItem, shopItem.data.versions[0])"
+        [disabled]="ownsProduct(shopItem.data)"
       >
       </p-button>
       <span style="font-size: large">
-        ${{shopItem.data.version[0].price}}
+        ${{shopItem.data.versions[0].price}}
       </span>
     </div>
   </div>
@@ -100,9 +101,20 @@
             <i class="fas fa-file-circle-plus"></i>
           </span>
           <div class="flex-column" style="flex: 0.75; color: var(--surface-0)">
-            <span style="font-style: larger; font-weight: 600">
-              {{addon.name}}
-            </span>
+            <div class="flex-row" style="align-items: center; gap: 0.5em">
+              <span style="font-style: larger; font-weight: 600">
+                {{addon.name}}
+              </span>
+              <span
+                *ngIf="addon.flagged"
+                style="color: var(--red-300)"
+                pTooltip="Unofficial Addon"
+                tooltipPosition="top"
+              >
+                <i class="fas fa-flag"></i>
+              </span>
+            </div>
+
             <span style="font-size: smaller; font-style: italic">
               {{addon.description}}
             </span>

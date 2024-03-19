@@ -3,6 +3,7 @@ import { TreeNode } from 'primeng/api';
 import { ShopItem, VersionInfo } from 'src/app/services/shopService.service';
 import { User, UserService } from 'src/app/services/userService.service';
 import { ComponentBridgeService } from 'src/app/services/componentBridgeService.service';
+import { UserEntity } from 'src/app/entities/user.entity';
 
 @Component({
   selector: 'shop-item-detail',
@@ -29,7 +30,7 @@ export class ShopItemDetail {
   @ViewChild('addons') addons!: TemplateRef<any>;
   @ViewChild('empty') empty!: TemplateRef<any>;
 
-  user!: User;
+  user!: UserEntity;
   template!: TemplateRef<any>;
   addonsList: ShopItem[] = [];
   filteredAddonsList: ShopItem[] = [];
@@ -40,19 +41,21 @@ export class ShopItemDetail {
     private componentBridgeService: ComponentBridgeService,
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.user = new UserEntity(this.userService.getUser()!);
+  }
 
   purchaseItem(shopItem: TreeNode, version: VersionInfo) {
     shopItem.data.versions[version.id].purchased = true;
+    shopItem.data.addons = [];
+    shopItem.data.scripts = [];
 
-    this.userService.updateWallet(-25);
-    this.userService.addProduct(shopItem);
-
-    this.user = this.userService.getUser()!;
-    this.user.hasTerminal = true;
+    this.user.addProduct(shopItem.data);
     this.userService.saveUser(this.user);
+  }
 
-    this.componentBridgeService.updateSidebar(this.user);
+  ownsProduct(shopItem: ShopItem) {
+    return this.userService.hasProduct(shopItem.name);
   }
 
   filterAddons(event: any) {

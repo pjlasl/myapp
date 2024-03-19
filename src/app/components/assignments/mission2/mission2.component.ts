@@ -9,11 +9,15 @@ import { EmailModal } from '../../email/modal/email.component';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { ShopService } from 'src/app/services/shopService.service';
+import { ShopItemEntity } from 'src/app/entities/shopItem.entity';
+import { MessagesModule } from 'primeng/messages';
+import { UserEntity } from 'src/app/entities/user.entity';
+
 @Component({
   templateUrl: '../mission2/mission2.html',
   standalone: true,
   providers: [DialogService],
-  imports: [CommonModule, EmailRow, ButtonModule],
+  imports: [CommonModule, EmailRow, ButtonModule, MessagesModule],
 })
 export class Mission2 {
   @Input() id: number = 0;
@@ -21,8 +25,8 @@ export class Mission2 {
   @Input() complete: boolean = false;
   @Input() emails: Email[] | undefined;
 
-  ref: DynamicDialogRef | undefined;
-  user: User | undefined;
+  ref!: DynamicDialogRef;
+  user!: UserEntity;
   activeEmail!: Email;
 
   @ViewChild('step1') step1!: ElementRef;
@@ -80,7 +84,7 @@ export class Mission2 {
       ];
     }
 
-    this.user = this.userService.getUser();
+    this.user = new UserEntity(this.userService.getUser()!);
   }
 
   getEmail(id: number) {
@@ -129,6 +133,8 @@ export class Mission2 {
     email.visible = true;
 
     this.missionService.updateMission(this);
+
+    this.ref.close();
   }
 
   sendReply2() {
@@ -139,41 +145,50 @@ export class Mission2 {
       email.visible = true;
 
       this.missionService.updateMission(this);
+      this.ref.close();
     }
   }
 
   sendReply3() {
+    this.user.addXp(100);
+    this.userService.saveUser(this.user);
+
     let email = this.getEmail(3);
     email.visible = true;
+    this.activeEmail.actionComplete = true;
     this.missionService.updateMission(this);
+    this.ref.close();
   }
 
   downloadAttachments() {
-    this.userService.addProduct(
-      this.shopService.getShopItemByName('PortHack')!,
-    );
-    this.userService.addProduct(
-      this.shopService.getShopItemByName('Device Sniffer')!,
-    );
-    this.userService.addProduct(
-      this.shopService.getShopItemByName('HappyFace')!,
-    );
+    let zipFile = {
+      addons: [this.shopService.addonsList[0], this.shopService.addonsList[1]],
+      scripts: [this.shopService.scriptsList[0]],
+    };
+
+    let product = new ShopItemEntity(this.user.getProduct('terminal')!);
+    product.addAddons(zipFile.addons);
+    product.addScripts(zipFile.scripts);
+
+    this.user.updateProduct(product.getItem());
+    this.userService.saveUser(this.user);
   }
 
   hasAttachments() {
-    let found = this.userService.hasProduct('PortHack');
-    found = this.userService.hasProduct('Device Sniffer');
-    found = this.userService.hasProduct('HappyFace');
+    let product = new ShopItemEntity(this.user.getProduct('terminal')!);
+
+    let found = product.hasAddon('Port Hack');
+    found = product.hasAddon('Device Sniffer');
+    found = product.hasScripts('HappyDayz');
     return found;
   }
 
   goToShop() {
     this.router.navigate(['shop']);
-    this.ref?.close();
+    this.ref.close();
   }
 
   hasTerminal() {
-    return;
     let response = this.userService.hasProduct('terminal');
     return !response;
   }

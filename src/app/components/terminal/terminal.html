@@ -25,13 +25,27 @@
     </div>
     <div
       class="flex-row"
-      style="justify-content: flex-end; padding: 0.5em; gap: 0.5em"
+      style="
+        justify-content: flex-end;
+        padding: 0.5em;
+        gap: 0.5em;
+        align-items: center;
+      "
     >
+      <div *ngIf="scanningNetwork">
+        <p-progressSpinner
+          [style]="{'width':'2em', 'height':'2em'}"
+          strokeWidth="4"
+          fill="var(--surface-ground)"
+          animationDuration="3s"
+        ></p-progressSpinner>
+      </div>
       <p-button
         label="Scan"
         icon="fas fa-tower-cell"
         size="small"
         (click)="onScan()"
+        [disabled]="scanningNetwork"
       ></p-button>
       <p-button
         label="My Computer"
@@ -77,6 +91,6 @@
       border-left: 1px solid var(--surface-border);
     "
   >
-    <device-console></device-console>
+    <device-console [user]="user" [terminal]="terminal"></device-console>
   </div>
 </div>

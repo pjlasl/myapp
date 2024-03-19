@@ -6,6 +6,8 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MyComputer } from '../myComputer/myComputer.component';
 import { User, UserService } from 'src/app/services/userService.service';
 import { Network } from 'src/app/services/networkService.service';
+import { ShopItemEntity } from 'src/app/entities/shopItem.entity';
+import { UserEntity } from 'src/app/entities/user.entity';
 
 export interface Devices {
   id: number;
@@ -32,7 +34,9 @@ export interface DeviceContent {
   providers: [DialogService],
 })
 export class DeviceConsole {
-  user!: User;
+  @Input() user!: UserEntity;
+  @Input() terminal!: ShopItemEntity;
+
   connectedNetwork!: Network;
   foundDevices: any[] = [];
   isPortHack: boolean = false;
@@ -47,7 +51,6 @@ export class DeviceConsole {
   ) {}
 
   ngOnInit() {
-    this.user = this.userService.getUser()!;
     this.subscribeDeviceUpdate();
   }
 
@@ -83,7 +86,8 @@ export class DeviceConsole {
     setTimeout(() => {
       this.isPortHack = false;
       this.connectedNetwork.open = true;
-      this.userService.updateCurrentXP(50);
+      this.user.addXp(50);
+      this.userService.saveUser(this.user);
     }, 5000);
   }
 
@@ -99,7 +103,8 @@ export class DeviceConsole {
 
   onVirusUpload(device: Devices) {
     device.affected = true;
-    this.userService.updateWallet(1);
+    this.user.addMoney(this.terminal.getScriptsTotalValue());
+    this.userService.saveUser(this.user);
   }
 
   openDevice(device: Devices) {

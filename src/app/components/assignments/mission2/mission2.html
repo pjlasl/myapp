@@ -42,9 +42,28 @@
 
   <ng-template #step2>
     <div class="flex-column">
-      <div>
-        <p>Hey {{user?.info.firstName}}!</p>
-        <p>
+      <div
+        class="flex-row"
+        style="
+          flex: 1;
+          border-top: 1px solid var(--surface-border);
+          border-bottom: 1px solid var(--surface-border);
+          margin: 0.5em 0;
+        "
+      >
+        <p-button
+          [plain]="true"
+          [text]="true"
+          (click)="sendReply2()"
+          [disabled]="hasTerminal() || !email.actionComplete"
+          label="Reply"
+          icon="fas fa-reply"
+        >
+        </p-button>
+      </div>
+      <div class="flex-column" style="gap: 0.5em">
+        <span>Hey {{user?.info.firstName}}!</span>
+        <span>
           Way to go on taking the leap with the new venture! I'm proud of you
           for seizing the opportunity. Now, to get started, here's what you need
           to do: head over to
@@ -54,67 +73,38 @@
             >this shop</a
           >
           and purchase the "Terminal" software.
-        </p>
-        <p>
+        </span>
+        <span>
           Once you've got it installed, we'll be on our way to making things
           happen.<br />
           Reply back to me once you have the software installed.
-        </p>
-        <p>Excited to see where this takes us!</p>
-        <p>Cheers, Jack</p>
-      </div>
-      <div>
-        <p-button
-          [plain]="true"
-          [text]="true"
-          (click)="sendReply2()"
-          [disabled]="hasTerminal()"
-          label="Reply"
-          icon="fas fa-reply"
-        >
-        </p-button>
+        </span>
+        <span>Excited to see where this takes us!</span>
+        <span>Cheers, Jack</span>
       </div>
     </div>
   </ng-template>
 
   <ng-template #step3>
     <div class="flex-column">
-      <div>
-        <p>Hey {{user?.info.firstName}},</p>
-        <p>
-          Now that you have downloaded and installed the software, I guess I
-          should explain a little about the company I work with.
-        </p>
-        <p>
-          So, I've been working for this "company" for a while now, and let's
-          just say it operates in a bit of a gray area of legality. We're into
-          some pretty interesting stuff, walking that fine line between what's
-          totally legit and what's, well, not so much. But hey, it keeps things
-          exciting, right? We've got a talented team, and despite the risks,
-          there's some serious potential for growth and profit. Just thought I'd
-          give you a heads up on what I've been up to lately.
-        </p>
-
-        <p>
-          Attached you will find a .zip file containing some addons for the
-          "Terminal" program. Once you have installed the addons, reply to this
-          email and I will send further instructions.
-        </p>
-
-        <p>How Exciting! Jack</p>
-      </div>
-      <div class="flex-row" style="gap: 0.8em; align-items: center">
-        <div>
-          <p-button
-            [plain]="true"
-            [text]="true"
-            (click)="sendReply3()"
-            [disabled]="!hasAttachments()"
-            label="Reply"
-            icon="fas fa-reply"
-          >
-          </p-button>
-        </div>
+      <div
+        class="flex-row"
+        style="
+          flex: 1;
+          border-top: 1px solid var(--surface-border);
+          border-bottom: 1px solid var(--surface-border);
+          margin: 0.5em 0;
+        "
+      >
+        <p-button
+          [plain]="true"
+          [text]="true"
+          (click)="sendReply3()"
+          [disabled]="!hasAttachments()"
+          label="Reply"
+          icon="fas fa-reply"
+        >
+        </p-button>
         <div class="flex-row" style="gap: 0.5em">
           <p-button
             [plain]="true"
@@ -126,6 +116,33 @@
           >
           </p-button>
         </div>
+      </div>
+      <div class="flex-column" style="gap: 0.5em">
+        <span>Hey {{user?.info.firstName}},</span>
+        <span>
+          Now that you have downloaded and installed the software, I guess I
+          should explain a little about the company I work for.
+        </span>
+        <span>
+          So, I've been working for this company for a while now, and let's just
+          say it operates in a bit of a gray area of legality. We're into some
+          pretty interesting stuff, walking that fine line between what's
+          totally legit and what's, well, not so much. But hey, it keeps things
+          exciting, right? We've got a talented team, and despite the risks,
+          there's some serious potential for growth and profit.
+        </span>
+        <span>
+          Attached you will find a .zip file containing some addons for the
+          "Terminal" program. These addons are no longer available for purchase
+          at the request of the application author. It is a good thing my
+          company has copies!
+        </span>
+        <span>
+          Once you have downloaded and installed the addons, reply to this email
+          and I will send further instructions.
+        </span>
+
+        <span>How Exciting! Jack</span>
       </div>
     </div>
   </ng-template>
@@ -150,6 +167,15 @@
           level up your experience.
         </p>
         <p>Good luck and have fun! Jack</p>
+      </div>
+      <div>
+        <p-messages severity="success">
+          <ng-template pTemplate>
+            <div class="flex-row" style="justify-content: center; flex: 1">
+              Assignment Complete: +100 XP
+            </div>
+          </ng-template>
+        </p-messages>
       </div>
     </div>
   </ng-template>

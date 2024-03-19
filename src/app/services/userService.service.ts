@@ -1,25 +1,36 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from './storageService.service';
-import { ShopService } from './shopService.service';
+import { ShopItem, ShopService } from './shopService.service';
 import { ComponentBridgeService } from 'src/app/services/componentBridgeService.service';
 import { Mission } from './missionService.service';
 import { TreeNode } from 'primeng/api';
+import { UserEntity } from '../entities/user.entity';
 
 export interface User {
   info: any;
   loggedIn: boolean;
-  purchasedProduct: TreeNode[];
-  cash: number;
+  purchasedProduct: ShopItem[];
   missions: Mission[];
   level: Level;
-  hasTerminal: boolean;
   hasShop: boolean;
+  wallet: Wallet;
 }
 
 export interface Level {
-  level: number;
+  currentLevel: number;
   currentXp: number;
   levelXp: number;
+  addXp?: (value: number) => void;
+  getCurrentLevel?: () => number;
+  getCurrentXp?: () => number;
+  getCurrentLevelXp?: () => number;
+}
+
+export interface Wallet {
+  cash: number;
+  addMoney?: (value: number) => void;
+  removeMoney?: (value: number) => void;
+  getMoney?: () => number;
 }
 
 @Injectable({
@@ -39,7 +50,6 @@ export class UserService {
       info: data,
       loggedIn: true,
       purchasedProduct: [],
-      cash: 0,
       missions: [
         {
           id: 0,
@@ -48,12 +58,14 @@ export class UserService {
         },
       ],
       level: {
-        level: 1,
+        currentLevel: 1,
         currentXp: 0,
-        levelXp: this._nextLevel(1),
+        levelXp: 1000,
       },
-      hasTerminal: false,
       hasShop: false,
+      wallet: {
+        cash: 0,
+      },
     };
 
     this.saveUser(user);
@@ -83,63 +95,37 @@ export class UserService {
 
   saveUser(user: User) {
     this.storageService.saveLocalData('user', JSON.stringify(user));
-  }
-
-  getWallet() {
-    return this.getUser()?.cash;
-  }
-
-  updateWallet(value: number = 0) {
-    let user: User = this.getUser()!;
-    user.cash += value;
-
     this.componentBridgeService.updateUser(user);
-    this.saveUser(user);
+    this.componentBridgeService.updateSidebar(user);
   }
 
   addProduct(shopItem: TreeNode) {
     let user = this.getUser()!;
-    user?.purchasedProduct.unshift(shopItem);
+
+    user?.purchasedProduct.unshift(shopItem.data);
     this.saveUser(user);
   }
 
   hasProduct(productName: string) {
-    let index = this.getUser()?.purchasedProduct.findIndex((item) => {
-      return item.label?.toLowerCase() === productName.toLowerCase();
-    });
+    let index = this.getUser()?.purchasedProduct.findIndex(
+      (item) => item.name?.toLowerCase() === productName.toLowerCase(),
+    );
 
     return index! >= 0 ? true : false;
   }
 
-  getLevel() {
-    return this.user?.level?.level;
+  hasProductAddon(productName: string, addonName: string) {
+    let product = this.getUser()?.purchasedProduct.find(
+      (item) => item.name.toLowerCase() === productName.toLowerCase(),
+    );
+    return product?.addons?.find(
+      (item) => item.name.toLowerCase() === addonName.toLowerCase(),
+    );
   }
 
-  getLevelXP() {
-    return this.user?.level?.levelXp;
-  }
-
-  getCurrentXP() {
-    return this.user?.level.currentXp;
-  }
-
-  updateCurrentXP(value: number) {
-    let user = this.getUser()!;
-    user.level.currentXp += value;
-
-    if (user.level.currentXp >= user.level.levelXp) {
-      user.level.level += 1;
-      user.level.levelXp = this._nextLevel(user.level.level);
-      user.level.currentXp = 0;
-    }
-
-    this.saveUser(user);
-    this.componentBridgeService.updateUser(user);
-  }
-
-  _nextLevel(lvl: number) {
-    const exponent = 1.5;
-    const baseXp = 1000;
-    return Math.floor(baseXp * Math.pow(lvl, exponent));
+  getProduct(productName: string) {
+    return this.getUser()?.purchasedProduct.find(
+      (item) => item.name.toLowerCase() === productName.toLowerCase(),
+    );
   }
 }

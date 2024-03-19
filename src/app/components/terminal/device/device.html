@@ -43,6 +43,7 @@
   <div class="flex-column" style="padding: 0.5em; gap: 0.5em">
     <div class="flex-row" style="gap: 0.2em">
       <p-button
+        *ngIf="terminal?.hasAddon('Port Hack')"
         pTooltip="Port Hack"
         tooltipPosition="top"
         icon="fas fa-user-secret"
@@ -56,6 +57,7 @@
     </div>
     <div class="flex-row" style="gap: 0.2em">
       <p-button
+        *ngIf="terminal?.hasAddon('Device Sniffer')"
         pTooltip="Identify Devices"
         tooltipPosition="top"
         icon="fas fa-search"
@@ -122,7 +124,7 @@
               <span style="color: var(--gray-500)"> {{device.address}} </span>
             </div>
             <div class="flex-row" style="gap: 0.3em">
-              <p-button
+              <!-- <p-button
                 *ngIf="device.allowContent"
                 [rounded]="true"
                 icon="fas fa-folder-tree"
@@ -131,7 +133,7 @@
                 tooltipPosition="left"
                 (click)="openDevice(device)"
               >
-              </p-button>
+              </p-button> -->
               <p-button
                 [rounded]="true"
                 icon="fas fa-bugs"

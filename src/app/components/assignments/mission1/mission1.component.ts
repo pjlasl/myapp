@@ -7,11 +7,13 @@ import { MissionService } from 'src/app/services/missionService.service';
 import { UserService } from 'src/app/services/userService.service';
 import { EmailRow } from '../../email/emailRow/emailRow.component';
 import { ButtonModule } from 'primeng/button';
+import { MessagesModule } from 'primeng/messages';
+import { UserEntity } from 'src/app/entities/user.entity';
 @Component({
   templateUrl: './mission1.html',
   standalone: true,
   providers: [DialogService],
-  imports: [CommonModule, EmailRow, ButtonModule],
+  imports: [CommonModule, EmailRow, ButtonModule, MessagesModule],
 })
 export class Mission1 {
   @Input() id: number = 0;
@@ -23,6 +25,7 @@ export class Mission1 {
   activeEmail!: Email;
 
   @ViewChild('step1') step1!: ElementRef;
+  @ViewChild('step2') step2!: ElementRef;
 
   constructor(
     private dialogService: DialogService,
@@ -47,13 +50,8 @@ export class Mission1 {
           from: 'Grandma',
           email: 'jolene.mayer@somemail.com',
           topic: 'Money transferred',
-          showFooter: false,
-          body: `<p>Hi Dear,</p>
-                 <p>Just a quick note to let you know that I've transferred the money for rent and groceries as discussed. It should be in your account now.</p>        
-                 <p>Take care, and remember, I'm here for you.</p>
-                 <p>Love, Grandma</p>`,
           read: false,
-          actionComplete: true,
+          actionComplete: false,
         },
       ];
     }
@@ -66,6 +64,9 @@ export class Mission1 {
     switch (id) {
       case 0:
         template = this.step1;
+        break;
+      case 1:
+        template = this.step2;
         break;
     }
 
@@ -90,7 +91,10 @@ export class Mission1 {
   }
 
   sendReply1() {
-    this.userService.updateWallet(25);
+    let user = new UserEntity(this.userService.getUser()!);
+    user.addMoney(25);
+    user.addXp(25);
+    this.userService.saveUser(user);
 
     this.activeEmail.actionComplete = true;
 
@@ -100,5 +104,6 @@ export class Mission1 {
 
     this.missionService.updateMission(this);
     this.userService.unlockMission();
+    this.ref.close();
   }
 }

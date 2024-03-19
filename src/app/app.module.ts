@@ -24,6 +24,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { RatingModule } from 'primeng/rating';
 import { DividerModule } from 'primeng/divider';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { MessagesModule } from 'primeng/messages';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { Intro } from './components/intro/intro.component';
 import { Header } from './components/header/header.component';
@@ -84,6 +86,8 @@ import { MissionService } from './services/missionService.service';
     RatingModule,
     DividerModule,
     InputSwitchModule,
+    MessagesModule,
+    ProgressSpinnerModule,
   ],
   providers: [
     ChanceService,

@@ -50,5 +50,30 @@
         <span>Love, Grandma</span>
       </div>
     </div>
+    <div></div>
+  </ng-template>
+
+  <ng-template #step2>
+    <div class="flex-column">
+      <div class="flex-column" style="gap: 0.5em">
+        <span>Hi Dear,</span>
+        <span
+          >Just a quick note to let you know that I've transferred the money for
+          rent and groceries as discussed. It should be in your account
+          now.</span
+        >
+        <span>Take care, and remember, I'm here for you.</span>
+        <span>Love, Grandma</span>
+      </div>
+      <div>
+        <p-messages severity="success">
+          <ng-template pTemplate>
+            <div class="flex-row" style="justify-content: center; flex: 1">
+              Assignment Complete: +25 XP
+            </div>
+          </ng-template>
+        </p-messages>
+      </div>
+    </div>
   </ng-template>
 </div>

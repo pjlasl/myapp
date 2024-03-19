@@ -20,5 +20,5 @@ a {
 
 .p-dialog .p-dialog-content {
     padding: .8em !important;
-    border-radius: 6px;
+    border-radius: 0;
   }
