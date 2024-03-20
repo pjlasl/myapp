@@ -25,9 +25,9 @@ export class Mission2 {
   @Input() complete: boolean = false;
   @Input() emails: Email[] | undefined;
 
-  ref: DynamicDialogRef | undefined;
+  ref2: DynamicDialogRef | undefined;
   user!: UserEntity;
-  activeEmail!: Email;
+  activeEmail2!: Email;
 
   @ViewChild('step1') step1!: ElementRef;
   @ViewChild('step2') step2!: ElementRef;
@@ -96,7 +96,7 @@ export class Mission2 {
   }
 
   openEmail(id: number) {
-    this.activeEmail = this.getEmail(id);
+    this.activeEmail2 = this.getEmail(id);
     let template!: ElementRef;
 
     switch (id) {
@@ -114,22 +114,22 @@ export class Mission2 {
         break;
     }
 
-    this.ref = this.dialogService.open(EmailModal, {
+    this.ref2 = this.dialogService.open(EmailModal, {
       showHeader: false,
       width: '40vw',
       data: {
-        email: this.activeEmail,
+        email: this.activeEmail2,
         test: template,
       },
     });
 
-    this.ref.onClose.subscribe((data: Email) => {
+    this.ref2.onClose.subscribe((data: Email) => {
       console.log(data);
     });
   }
 
   sendReply1() {
-    this.activeEmail.actionComplete = true;
+    this.activeEmail2.actionComplete = true;
 
     let email = this.getEmail(1);
     email.visible = true;
@@ -141,7 +141,7 @@ export class Mission2 {
 
   sendReply2() {
     if (this.userService.hasProduct('terminal')) {
-      this.activeEmail.actionComplete = true;
+      this.activeEmail2.actionComplete = true;
 
       let email = this.getEmail(2);
       email.visible = true;
@@ -158,7 +158,7 @@ export class Mission2 {
     let email = this.getEmail(3);
     email.visible = true;
 
-    this.activeEmail.actionComplete = true;
+    this.activeEmail2.actionComplete = true;
 
     this.missionService.updateMission(this);
     //this.ref?.close();
@@ -189,7 +189,7 @@ export class Mission2 {
 
   goToShop() {
     this.router.navigate(['shop']);
-    this.ref?.close();
+    this.ref2?.close();
   }
 
   hasTerminal() {
