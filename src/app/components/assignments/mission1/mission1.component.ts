@@ -104,6 +104,6 @@ export class Mission1 {
 
     this.missionService.updateMission(this);
     this.userService.unlockMission();
-    this.ref.close();
+    //this.ref.close();
   }
 }

@@ -136,7 +136,7 @@ export class Mission2 {
 
     this.missionService.updateMission(this);
 
-    this.ref?.close();
+    //this.ref?.close();
   }
 
   sendReply2() {
@@ -147,7 +147,7 @@ export class Mission2 {
       email.visible = true;
 
       this.missionService.updateMission(this);
-      this.ref?.close();
+      //this.ref?.close();
     }
   }
 
@@ -161,7 +161,7 @@ export class Mission2 {
     this.activeEmail.actionComplete = true;
 
     this.missionService.updateMission(this);
-    this.ref?.close();
+    //this.ref?.close();
   }
 
   downloadAttachments() {
