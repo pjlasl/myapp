@@ -21,7 +21,7 @@ export class Mission1 {
   @Input() complete: boolean = false;
   @Input() emails: Email[] | undefined;
 
-  ref!: DynamicDialogRef;
+  ref1!: DynamicDialogRef;
   activeEmail!: Email;
 
   @ViewChild('step1') step1!: ElementRef;
@@ -70,7 +70,7 @@ export class Mission1 {
         break;
     }
 
-    this.ref = this.dialogService.open(EmailModal, {
+    this.ref1 = this.dialogService.open(EmailModal, {
       showHeader: false,
       width: '40vw',
       data: {
@@ -79,7 +79,7 @@ export class Mission1 {
       },
     });
 
-    this.ref.onClose.subscribe((data: Email) => {});
+    this.ref1.onClose.subscribe((data: Email) => {});
   }
 
   getEmail(id: number) {
