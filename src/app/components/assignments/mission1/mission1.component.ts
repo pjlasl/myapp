@@ -18,7 +18,6 @@ import { UserEntity } from 'src/app/entities/user.entity';
 @Component({
   templateUrl: './mission1.html',
   standalone: true,
-  providers: [DialogService],
   imports: [CommonModule, EmailRow, ButtonModule, MessagesModule],
 })
 export class Mission1 {

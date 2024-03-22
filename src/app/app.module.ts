@@ -17,7 +17,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressBarModule } from 'primeng/progressbar';
-import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
@@ -90,6 +90,7 @@ import { MissionService } from './services/missionService.service';
     ProgressSpinnerModule,
   ],
   providers: [
+    DialogService,
     ChanceService,
     ServerService,
     ComponentBridgeService,
