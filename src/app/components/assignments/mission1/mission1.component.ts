@@ -1,4 +1,10 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewChild,
+  ElementRef,
+  TemplateRef,
+} from '@angular/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EmailModal } from '../../email/modal/email.component';
 import { CommonModule } from '@angular/common';
@@ -24,8 +30,8 @@ export class Mission1 {
   ref1!: DynamicDialogRef;
   activeEmail!: Email;
 
-  @ViewChild('step1') step1!: ElementRef;
-  @ViewChild('step2') step2!: ElementRef;
+  @ViewChild('step1') step1!: TemplateRef<any>;
+  @ViewChild('step2') step2!: TemplateRef<any>;
 
   constructor(
     private dialogService: DialogService,
@@ -59,7 +65,7 @@ export class Mission1 {
 
   openEmail(id: number) {
     this.activeEmail = this.getEmail(id);
-    let template: ElementRef | undefined;
+    let template!: TemplateRef<any>;
 
     switch (id) {
       case 0:

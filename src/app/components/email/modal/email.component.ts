@@ -4,7 +4,6 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Email } from '../emailClient.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
-@UntilDestroy()
 @Component({
   templateUrl: './email.html',
   styleUrls: ['./email.component.css'],

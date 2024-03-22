@@ -5,14 +5,14 @@ import { Shop } from './components/shop/shop.component';
 import { EmailClient } from './components/email/emailClient.component';
 
 const routes: Routes = [
-  {path: 'terminal', component: Terminal},
-  {path: 'shop', component: Shop},
-  {path: 'emailClient', component: EmailClient},
-  {path: '', redirectTo: '/terminal', pathMatch: 'full'},
+  { path: 'terminal', component: Terminal },
+  { path: 'shop', component: Shop },
+  { path: 'emailClient', component: EmailClient },
+  { path: '', redirectTo: '/emailClient', pathMatch: 'full' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
